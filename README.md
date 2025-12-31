@@ -130,7 +130,7 @@ npm install
 npm run dev
 
 > ⚠️ **Note:** Make sure to configure environment variables for database credentials, JWT secrets, and Email/SMS APIs before running the project.
-
+```
 ---
 
 ## 👥 Team Members
@@ -165,5 +165,9 @@ npm run dev
 
 This project is developed for **academic purposes** and is intended for **educational use only**.
 
-# Run the application
+---
+
+## ▶️ Run the Application
+
+```bash
 npm run dev
