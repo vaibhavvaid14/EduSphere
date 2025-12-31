@@ -166,8 +166,3 @@ npm run dev
 This project is developed for **academic purposes** and is intended for **educational use only**.
 
 ---
-
-## ▶️ Run the Application
-
-```bash
-npm run dev
