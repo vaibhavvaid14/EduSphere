@@ -34,7 +34,9 @@ function PieChart({ labels, dataValues }) {
         },
     };
 
-    return <Pie data={data} options={options} />;
+    return <div className="w-full max-w-3xl mx-auto h-64 sm:h-80">
+        <Pie data={data} options={options} />;
+        </div>
 }
 
 export default PieChart;

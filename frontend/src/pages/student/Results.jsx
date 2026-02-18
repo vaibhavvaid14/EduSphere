@@ -4,13 +4,14 @@ function Results() {
     return (
         <DashboardLayout>
             <div className="bg-white rounded-2xl shadow-md overflow-hidden">
+                <div className="overflow-x-auto">
                 <div className="p-6 border-b">
                     <h2 className="text-xl font-semibold text-slate-700">
                         Academic Results
                     </h2>
                 </div>
 
-                <table className="w-full text-sm">
+                <table className="min-w-full text-sm">
                     <thead className="bg-indigo-50 text-indigo-700">
                         <tr>
                             <th className="p-4 text-left">Subject</th>
@@ -25,6 +26,7 @@ function Results() {
                         <ResultRow subject="Computer Science" marks="92" grade="A+" />
                     </tbody>
                 </table>
+                </div>
             </div>
         </DashboardLayout>
     );

@@ -7,7 +7,7 @@ function FacultyDashboard() {
         <DashboardLayout>
 
             {/* KPI Cards */}
-            <div className="grid grid-cols-3 gap-6 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 <StatCard title="Total Classes" value="24" />
                 <StatCard title="Students Assigned" value="180" />
                 <StatCard title="Pending Grievances" value="3" />

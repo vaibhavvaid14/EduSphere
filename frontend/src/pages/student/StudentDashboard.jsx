@@ -6,7 +6,7 @@ function StudentDashboard() {
         <DashboardLayout>
             <div className="p-8 animate-fadeIn">
                 {/* 🔹 Top Statistic Cards */}
-                <div className="grid grid-cols-3 gap-6 mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                     <StatCard title="Attendance" value="82%" />
                     <StatCard title="GPA" value="8.4" />
                     <StatCard title="Pending Grievances" value="1" />

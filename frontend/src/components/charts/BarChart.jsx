@@ -40,7 +40,7 @@ function BarChart({ labels, dataValues, title }) {
         },
     };
 
-    return <div className="h-90">
+    return <div className="w-full max-w-3xl mx-auto h-64 sm:h-80">
         <Bar data={data} options={options} />
     </div>
 }

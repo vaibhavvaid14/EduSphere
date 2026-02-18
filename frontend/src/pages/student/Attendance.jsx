@@ -4,13 +4,14 @@ function Attendance() {
     return (
         <DashboardLayout>
             <div className="bg-white rounded-2xl shadow-md overflow-hidden">
+                <div className="overflow-x-auto">
                 <div className="p-6 border-b">
                     <h2 className="text-xl font-semibold text-slate-700">
                         Attendance Record
                     </h2>
                 </div>
 
-                <table className="w-full text-sm">
+                    <table className="min-w-full text-sm">
                     <thead className="bg-indigo-50 text-indigo-700">
                         <tr>
                             <th className="p-4 text-left">Subject</th>
@@ -26,6 +27,7 @@ function Attendance() {
                         <AttendanceRow subject="Computer Science" held="42" attended="39" percent="93%" />
                     </tbody>
                 </table>
+                </div>
             </div>
         </DashboardLayout>
     );

@@ -7,7 +7,7 @@ function AdminDashboard() {
         <DashboardLayout>
 
             {/* KPI Cards */}
-            <div className="grid grid-cols-3 gap-6 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 <StatCard title="Total Students" value="320" />
                 <StatCard title="Total Faculty" value="28" />
                 <StatCard title="Active Notices" value="5" />
