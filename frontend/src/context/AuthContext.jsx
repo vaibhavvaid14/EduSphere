@@ -50,31 +50,24 @@ export const AuthProvider = ({ children }) => {
     //     }
     // };
     const login = (data) => {
-        // If it's already an object (dummy mode)
+        let userData;
+
         if (typeof data === "object") {
-            setUser(data);
-
-            if (data.role === "student") {
-                navigate("/student/dashboard");
-            } else if (data.role === "faculty") {
-                navigate("/faculty/dashboard");
-            } else if (data.role === "admin") {
-                navigate("/admin/dashboard");
-            }
-
-            return;
+            // Dummy mode
+            userData = data;
+        } else {
+            // Real JWT mode
+            setToken(data);
+            userData = jwtDecode(data);
         }
 
-        // If it's a real JWT string
-        setToken(data);
-        const decoded = jwtDecode(data);
-        setUser(decoded);
+        setUser(userData);
 
-        if (decoded.role === "student") {
+        if (userData.role === "student") {
             navigate("/student/dashboard");
-        } else if (decoded.role === "faculty") {
+        } else if (userData.role === "faculty") {
             navigate("/faculty/dashboard");
-        } else if (decoded.role === "admin") {
+        } else if (userData.role === "admin") {
             navigate("/admin/dashboard");
         }
     };
