@@ -1,31 +1,46 @@
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import StatCard from "../../components/common/StatCard";
 import BarChart from "../../components/charts/BarChart";
+import { useEffect, useState } from "react";
+import { getFacultyDashboardStats } from "../../services/facultyService";
 
 function FacultyDashboard() {
+
+    const [stats, setStats] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        getFacultyDashboardStats().then(data => {
+            setStats(data);
+            setLoading(false);
+        });
+    }, []);
+
+    if (loading) {
+        return (
+            <DashboardLayout>
+                <div className="p-8">
+                    <p>Loading dashboard...</p>
+                </div>
+            </DashboardLayout>
+        );
+    }
+
     return (
         <DashboardLayout>
 
-            {/* KPI Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                <StatCard title="Total Classes" value="24" />
-                <StatCard title="Students Assigned" value="180" />
-                <StatCard title="Pending Grievances" value="3" />
+                <StatCard title="Total Classes" value={stats?.totalClasses || 0} />
+                <StatCard title="Students Assigned" value={stats?.students || 0} />
+                <StatCard title="Pending Grievances" value={stats?.grievances || 0} />
             </div>
 
-            {/* Performance Chart */}
             <div className="bg-white p-6 rounded-2xl shadow-md">
-                <h3 className="text-lg font-semibold text-slate-700 mb-6">
-                    Class Performance Overview
-                </h3>
-
-                <div className="max-w-3xl mx-auto">
-                    <BarChart
-                        title="Average Marks"
-                        labels={["Math", "Physics", "CS", "English"]}
-                        dataValues={[76, 82, 88, 79]}
-                    />
-                </div>
+                <BarChart
+                    title="Performance"
+                    labels={["Unit 1", "Unit 2", "Midterm", "Final"]}
+                    dataValues={[72, 80, 76, 85]}
+                />
             </div>
 
         </DashboardLayout>
