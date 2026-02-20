@@ -1,63 +1,78 @@
 import DashboardLayout from "../../components/layout/DashboardLayout";
-import BarChart from "../../components/charts/BarChart";
 import StatCard from "../../components/common/StatCard";
+import AttendanceChart from "../../components/student/AttendanceChart";
+import AttendanceTable from "../../components/student/AttendanceTable";
+import GrievanceForm from "../../components/student/GrievanceForm";
+import GrievanceStatus from "../../components/student/GrievanceStatus";
 import { useEffect, useState } from "react";
 import { getStudentAttendance } from "../../services/studentService";
+import Loader from "../../components/common/Loader";
+import ErrorMessage from "../../components/common/ErrorMessage";
 
 function StudentDashboard() {
 
-    const [attendanceData, setAttendanceData] = useState([]);
+    const [attendance, setAttendance] = useState([]);
+    const [grievances, setGrievances] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        getStudentAttendance().then((data) => {
-            setAttendanceData(data);
-            setLoading(false);
-        });
+        getStudentAttendance()
+            .then(data => setAttendance(data))
+            .catch(() => setError("Failed to load attendance data"))
+            .finally(() => setLoading(false));
     }, []);
+
+    const handleGrievanceSubmit = (message) => {
+        setGrievances([
+            ...grievances,
+            { message, status: "Pending" }
+        ]);
+    };
 
     if (loading) {
         return (
             <DashboardLayout>
-                <div className="p-8">
-                    <p className="text-gray-600">Loading dashboard...</p>
-                </div>
+                <Loader />
             </DashboardLayout>
         );
     }
 
+    if (error) {
+        return (
+            <DashboardLayout>
+                <ErrorMessage message={error} />
+            </DashboardLayout>
+        );
+    }
+
+    const average =
+        Math.round(
+            attendance.reduce((sum, item) => sum + item.percentage, 0) /
+            attendance.length
+        ) + "%";
+
     return (
         <DashboardLayout>
-            <div className="p-8 animate-fadeIn">
+            <div className="space-y-8 animate-fadeIn">
 
                 {/* KPI Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                    <StatCard
-                        title="Attendance"
-                        value={
-                            Math.round(
-                                attendanceData.reduce((sum, item) => sum + item.percentage, 0) /
-                                attendanceData.length
-                            ) + "%"
-                        }
-                    />
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <StatCard title="Attendance" value={average} />
                     <StatCard title="GPA" value="8.4" />
-                    <StatCard title="Pending Grievances" value="1" />
+                    <StatCard title="Pending Grievances" value={grievances.length} />
                 </div>
 
-                {/* Chart */}
-                <div className="bg-white p-6 rounded-2xl shadow-sm">
-                    <h3 className="text-lg font-semibold mb-4 text-slate-700">
-                        Attendance Overview
-                    </h3>
+                {/* Attendance Chart */}
+                <AttendanceChart attendance={attendance} />
 
-                    <div className="max-w-3xl mx-auto h-72">
-                        <BarChart
-                            title="Attendance %"
-                            labels={attendanceData.map(item => item.subject)}
-                            dataValues={attendanceData.map(item => item.percentage)}
-                        />
-                    </div>
+                {/* Attendance Table */}
+                <AttendanceTable attendance={attendance} />
+
+                {/* Grievance Section */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <GrievanceForm onSubmit={handleGrievanceSubmit} />
+                    <GrievanceStatus grievances={grievances} />
                 </div>
 
             </div>

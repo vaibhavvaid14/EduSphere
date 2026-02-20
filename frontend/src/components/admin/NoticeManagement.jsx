@@ -1,34 +1,50 @@
 import { useState } from "react";
 
-function AcademicCalendar() {
-    const [events] = useState([
-        { id: 1, title: "Semester Start", date: "01 Jan 2026" },
-        { id: 2, title: "Midterm Exams", date: "20 Mar 2026" },
-        { id: 3, title: "Final Exams", date: "15 Jun 2026" },
-        { id: 4, title: "Result Declaration", date: "30 Jun 2026" },
-    ]);
+function NoticeManagement() {
+    const [notice, setNotice] = useState("");
+    const [notices, setNotices] = useState([]);
+
+    const handlePublish = () => {
+        if (!notice) return;
+
+        setNotices([
+            ...notices,
+            { id: Date.now(), text: notice }
+        ]);
+
+        setNotice("");
+    };
 
     return (
         <div className="bg-white p-8 rounded-2xl shadow-md">
-            <h2 className="text-xl font-semibold text-slate-700 mb-6">
-                Academic Calendar
+            <h2 className="text-xl font-semibold mb-6 text-slate-700">
+                Notice Management
             </h2>
 
-            <ul className="space-y-4">
-                {events.map(event => (
-                    <li
-                        key={event.id}
-                        className="flex justify-between border-b pb-3 text-gray-700"
-                    >
-                        <span>{event.title}</span>
-                        <span className="font-medium text-indigo-600">
-                            {event.date}
-                        </span>
-                    </li>
+            <textarea
+                rows="3"
+                value={notice}
+                onChange={(e) => setNotice(e.target.value)}
+                className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-indigo-500"
+                placeholder="Write notice..."
+            />
+
+            <button
+                onClick={handlePublish}
+                className="mt-4 bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition"
+            >
+                Publish Notice
+            </button>
+
+            <div className="mt-6 space-y-3">
+                {notices.map(n => (
+                    <div key={n.id} className="bg-indigo-50 p-4 rounded-lg">
+                        {n.text}
+                    </div>
                 ))}
-            </ul>
+            </div>
         </div>
     );
 }
 
-export default AcademicCalendar;
+export default NoticeManagement;
