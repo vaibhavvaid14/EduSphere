@@ -12,6 +12,9 @@ import Attendance from "../pages/student/Attendance";
 import Results from "../pages/student/Results";
 import Notifications from "../pages/student/Notifications";
 import Grievance from "../pages/student/Grievance";
+import GatepassRequest from "../pages/student/GatepassRequest";
+import GatepassStatus from "../pages/student/GatepassStatus";
+import GatepassHistory from "../pages/student/GatepassHistory";
 
 // Faculty Pages
 import FacultyDashboard from "../pages/faculty/FacultyDashboard";
@@ -27,6 +30,8 @@ import ManageRoles from "../pages/admin/ManageRoles";
 import Calendar from "../pages/admin/Calendar";
 import Notices from "../pages/admin/Notices";
 import Reports from "../pages/admin/Reports";
+import CreateNotice from "../pages/admin/CreateNotice";
+import CreateEvent from "../pages/admin/CreateEvent";
 
 
 // Parents pages
@@ -42,6 +47,11 @@ import WardenDashboard from "../pages/warden/WardenDashboard";
 import FinalGatepassApproval from "../pages/warden/FinalGatepassApproval";
 import HostelLogs from "../pages/warden/HostelLogs";
 import HostelGrievances from "../pages/warden/HostelGrievances";
+
+
+// Common Pages
+import NoticeBoard from "../pages/common/NoticeBoard";
+import EventsPage from "../pages/common/EventsPage"
 
 function AppRoutes() {
     return (
@@ -103,6 +113,32 @@ function AppRoutes() {
                 element={
                     <ProtectedRoute allowedRoles={["student"]}>
                         <Grievance />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/student/gatepass/request"
+                element={
+                    <ProtectedRoute allowedRoles={["student"]}>
+                        <GatepassRequest />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/student/gatepass/status"
+                element={
+                    <ProtectedRoute allowedRoles={["student"]}>
+                        <GatepassStatus />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/student/gatepass/history"
+                element={
+                    <ProtectedRoute allowedRoles={["student"]}>
+                        <GatepassHistory />
                     </ProtectedRoute>
                 }
             />
@@ -207,6 +243,24 @@ function AppRoutes() {
                     </ProtectedRoute>
                 }
             />
+            <Route
+                path="/admin/create-notice"
+                element={
+                    <ProtectedRoute allowedRoles={["admin"]}>
+                        <CreateNotice />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/admin/create-event"
+                element={
+                    <ProtectedRoute allowedRoles={["admin"]}>
+                        <CreateEvent />
+                    </ProtectedRoute>
+                }
+            />
+
+
             {/* ================= PARENT ROUTES ================= */}
             <Route
                 path="/parent/dashboard"
@@ -288,7 +342,23 @@ function AppRoutes() {
                     </ProtectedRoute>
                 }
             />
-
+            {/* ================= COMMON ROUTES ================= */}
+            <Route
+                path="/notices"
+                element={
+                    <ProtectedRoute allowedRoles={["student", "faculty", "admin", "parent", "warden"]}>
+                        <NoticeBoard />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/events"
+                element={
+                    <ProtectedRoute allowedRoles={["student", "faculty", "admin", "parent", "warden"]}>
+                        <EventsPage />
+                    </ProtectedRoute>
+                }
+            />
         </Routes>
     );
 }
