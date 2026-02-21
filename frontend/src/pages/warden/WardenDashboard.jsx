@@ -1,23 +1,95 @@
-import React from "react";
+import DashboardLayout from "../../components/layout/DashboardLayout";
+import StatCard from "../../components/common/StatCard";
+import { useState } from "react";
 
-const WardenDashboard = () => {
+function WardenDashboard() {
+
+    const [pendingFinal] = useState(3);
+    const [grievances] = useState(1);
+
     return (
-        <div className="p-6 space-y-6">
-            <h1 className="text-2xl font-bold">Warden Dashboard</h1>
+        <DashboardLayout>
+            <div className="space-y-8 animate-fadeIn">
 
-            <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-white shadow rounded-xl p-6">
-                    <h2 className="text-gray-500">Pending Final Approvals</h2>
-                    <p className="text-3xl font-bold text-red-600 mt-2">3</p>
+                {/* KPI Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+                    <StatCard title="Pending Final Approvals" value={pendingFinal} />
+                    <StatCard title="Hostel Grievances" value={grievances} />
                 </div>
 
-                <div className="bg-white shadow rounded-xl p-6">
-                    <h2 className="text-gray-500">Hostel Grievances</h2>
-                    <p className="text-3xl font-bold text-yellow-500 mt-2">1</p>
+                {/* Approval Section */}
+                <div className="bg-white rounded-xl shadow-md p-6">
+                    <h2 className="text-lg font-semibold mb-4">
+                        Recent Gatepass Requests
+                    </h2>
+
+                    <div className="space-y-3 text-sm text-gray-600">
+                        <div className="flex justify-between">
+                            <span>Aman Verma - Medical</span>
+                            <span className="text-yellow-500 font-medium">
+                                Pending
+                            </span>
+                        </div>
+
+                        <div className="flex justify-between">
+                            <span>Rahul Singh - Home Visit</span>
+                            <span className="text-green-600 font-medium">
+                                Approved
+                            </span>
+                        </div>
+                    </div>
                 </div>
+
             </div>
-        </div>
+        </DashboardLayout>
     );
-};
+}
+
+export default WardenDashboard;import DashboardLayout from "../../components/layout/DashboardLayout";
+import StatCard from "../../components/common/StatCard";
+import { useState } from "react";
+
+function WardenDashboard() {
+
+    const [pendingFinal] = useState(3);
+    const [grievances] = useState(1);
+
+    return (
+        <DashboardLayout>
+            <div className="space-y-8 animate-fadeIn">
+
+                {/* KPI Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+                    <StatCard title="Pending Final Approvals" value={pendingFinal} />
+                    <StatCard title="Hostel Grievances" value={grievances} />
+                </div>
+
+                {/* Approval Section */}
+                <div className="bg-white rounded-xl shadow-md p-6">
+                    <h2 className="text-lg font-semibold mb-4">
+                        Recent Gatepass Requests
+                    </h2>
+
+                    <div className="space-y-3 text-sm text-gray-600">
+                        <div className="flex justify-between">
+                            <span>Aman Verma - Medical</span>
+                            <span className="text-yellow-500 font-medium">
+                                Pending
+                            </span>
+                        </div>
+
+                        <div className="flex justify-between">
+                            <span>Rahul Singh - Home Visit</span>
+                            <span className="text-green-600 font-medium">
+                                Approved
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </DashboardLayout>
+    );
+}
 
 export default WardenDashboard;

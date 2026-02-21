@@ -1,28 +1,50 @@
-import React from "react";
+import DashboardLayout from "../../components/layout/DashboardLayout";
+import StatCard from "../../components/common/StatCard";
+import { useState } from "react";
 
-const ParentDashboard = () => {
+function ParentDashboard() {
+
+    const [pendingGatepass] = useState(2);
+    const [attendance] = useState("82%");
+    const [meetings] = useState("15 Feb 2026");
+
     return (
-        <div className="p-6 space-y-6">
-            <h1 className="text-2xl font-bold">Parent Dashboard</h1>
+        <DashboardLayout>
+            <div className="space-y-8 animate-fadeIn">
 
-            <div className="grid md:grid-cols-3 gap-6">
-                <div className="bg-white shadow rounded-xl p-5">
-                    <h2 className="text-gray-500 text-sm">Ward Attendance</h2>
-                    <p className="text-3xl font-bold text-green-600 mt-2">82%</p>
+                {/* KPI Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <StatCard title="Ward Attendance" value={attendance} />
+                    <StatCard title="Pending Gatepass" value={pendingGatepass} />
+                    <StatCard title="Next Meeting" value={meetings} />
                 </div>
 
-                <div className="bg-white shadow rounded-xl p-5">
-                    <h2 className="text-gray-500 text-sm">Pending Gatepass Approvals</h2>
-                    <p className="text-3xl font-bold text-yellow-500 mt-2">2</p>
+                {/* Gatepass Summary Section */}
+                <div className="bg-white rounded-xl shadow-md p-6">
+                    <h2 className="text-lg font-semibold mb-4">
+                        Recent Gatepass Requests
+                    </h2>
+
+                    <div className="space-y-3 text-sm text-gray-600">
+                        <div className="flex justify-between">
+                            <span>Medical Visit</span>
+                            <span className="text-yellow-500 font-medium">
+                                Pending
+                            </span>
+                        </div>
+
+                        <div className="flex justify-between">
+                            <span>Family Function</span>
+                            <span className="text-green-600 font-medium">
+                                Approved
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
-                <div className="bg-white shadow rounded-xl p-5">
-                    <h2 className="text-gray-500 text-sm">Upcoming Meeting</h2>
-                    <p className="text-lg mt-2">15 Feb 2026</p>
-                </div>
             </div>
-        </div>
+        </DashboardLayout>
     );
-};
+}
 
 export default ParentDashboard;
