@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
 
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [sessionExpiry, setSessionExpiry] = useState(null);
 
     // 🔹 Load user from token on refresh
     useEffect(() => {
@@ -19,11 +20,11 @@ export const AuthProvider = ({ children }) => {
             try {
                 const decoded = jwtDecode(token);
 
-                // Check expiration
                 if (decoded.exp * 1000 < Date.now()) {
                     logout();
                 } else {
                     setUser(decoded);
+                    setSessionExpiry(decoded.exp * 1000);
                 }
             } catch (error) {
                 console.error("Invalid token");
@@ -34,21 +35,21 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
     }, []);
 
-    // 🔹 Login function
-    // const login = (token) => {
-    //     setToken(token);
-    //     const decoded = jwtDecode(token);
-    //     setUser(decoded);
+    // 🔹 Faculty 24-Hour Session Expiry Checker
+    useEffect(() => {
+        if (!user || !sessionExpiry) return;
 
-    //     // Redirect based on role
-    //     if (decoded.role === "student") {
-    //         navigate("/student/dashboard");
-    //     } else if (decoded.role === "faculty") {
-    //         navigate("/faculty/dashboard");
-    //     } else if (decoded.role === "admin") {
-    //         navigate("/admin/dashboard");
-    //     }
-    // };
+        const interval = setInterval(() => {
+            if (Date.now() > sessionExpiry) {
+                alert("Session expired. Please login again.");
+                logout();
+            }
+        }, 60000); // check every 1 min
+
+        return () => clearInterval(interval);
+    }, [user, sessionExpiry]);
+
+    // 🔹 Login Function
     const login = (data) => {
         let userData;
 
@@ -63,19 +64,41 @@ export const AuthProvider = ({ children }) => {
 
         setUser(userData);
 
-        if (userData.role === "student") {
-            navigate("/student/dashboard");
-        } else if (userData.role === "faculty") {
-            navigate("/faculty/dashboard");
-        } else if (userData.role === "admin") {
-            navigate("/admin/dashboard");
+        // If backend does not provide exp for faculty in dummy mode
+        if (userData.role === "faculty" && !userData.exp) {
+            const expiry = Date.now() + 24 * 60 * 60 * 1000;
+            setSessionExpiry(expiry);
+        } else if (userData.exp) {
+            setSessionExpiry(userData.exp * 1000);
+        }
+
+        // 🔹 Redirect based on role
+        switch (userData.role) {
+            case "student":
+                navigate("/student/dashboard");
+                break;
+            case "faculty":
+                navigate("/faculty/dashboard");
+                break;
+            case "admin":
+                navigate("/admin/dashboard");
+                break;
+            case "parent":
+                navigate("/parent/dashboard");
+                break;
+            case "warden":
+                navigate("/warden/dashboard");
+                break;
+            default:
+                navigate("/login");
         }
     };
 
-    // 🔹 Logout function
+    // 🔹 Logout
     const logout = () => {
         removeToken();
         setUser(null);
+        setSessionExpiry(null);
         navigate("/login");
     };
 

@@ -28,11 +28,27 @@ import Calendar from "../pages/admin/Calendar";
 import Notices from "../pages/admin/Notices";
 import Reports from "../pages/admin/Reports";
 
+
+// Parents pages
+import ParentDashboard from "../pages/parent/ParentDashboard";
+import WardAttendance from "../pages/parent/WardAttendance";
+import GatepassApproval from "../pages/parent/GatepassApproval";
+import InOutLogs from "../pages/parent/InOutLogs";
+import ScheduleMeeting from "../pages/parent/ScheduleMeeting";
+
+
+// Warden pages 
+import WardenDashboard from "../pages/warden/WardenDashboard";
+import FinalGatepassApproval from "../pages/warden/FinalGatepassApproval";
+import HostelLogs from "../pages/warden/HostelLogs";
+import HostelGrievances from "../pages/warden/HostelGrievances";
+
 function AppRoutes() {
     return (
         <Routes>
 
             {/* Public Routes */}
+            <Route path="/" element={<Navigate to="/login" />} />
             <Route path="/login" element={<Login />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
 
@@ -191,9 +207,87 @@ function AppRoutes() {
                     </ProtectedRoute>
                 }
             />
+            {/* ================= PARENT ROUTES ================= */}
+            <Route
+                path="/parent/dashboard"
+                element={
+                    <ProtectedRoute allowedRoles={["parent"]}>
+                        <ParentDashboard />
+                    </ProtectedRoute>
+                }
+            />
 
-            {/* Default Redirect */}
-            <Route path="*" element={<Navigate to="/login" />} />
+            <Route
+                path="/parent/attendance"
+                element={
+                    <ProtectedRoute allowedRoles={["parent"]}>
+                        <WardAttendance />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/parent/gatepass"
+                element={
+                    <ProtectedRoute allowedRoles={["parent"]}>
+                        <GatepassApproval />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/parent/logs"
+                element={
+                    <ProtectedRoute allowedRoles={["parent"]}>
+                        <InOutLogs />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/parent/meeting"
+                element={
+                    <ProtectedRoute allowedRoles={["parent"]}>
+                        <ScheduleMeeting />
+                    </ProtectedRoute>
+                }
+            />
+            {/* ================= WARDEN ROUTES ================= */}
+            <Route
+                path="/warden/dashboard"
+                element={
+                    <ProtectedRoute allowedRoles={["warden"]}>
+                        <WardenDashboard />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/warden/approvals"
+                element={
+                    <ProtectedRoute allowedRoles={["warden"]}>
+                        <FinalGatepassApproval />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/warden/logs"
+                element={
+                    <ProtectedRoute allowedRoles={["warden"]}>
+                        <HostelLogs />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/warden/grievances"
+                element={
+                    <ProtectedRoute allowedRoles={["warden"]}>
+                        <HostelGrievances />
+                    </ProtectedRoute>
+                }
+            />
 
         </Routes>
     );
