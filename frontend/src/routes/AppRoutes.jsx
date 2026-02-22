@@ -22,6 +22,7 @@ import ManageAttendance from "../pages/faculty/ManageAttendance";
 import ManageMarks from "../pages/faculty/ManageMarks";
 import PerformanceAnalytics from "../pages/faculty/PerformanceAnalytics";
 import FacultyGrievances from "../pages/faculty/FacultyGrievances";
+import MultiLectureAttendance from "../pages/faculty/MultiLectureAttendance";
 
 // Admin Pages
 import AdminDashboard from "../pages/admin/AdminDashboard";
@@ -185,6 +186,14 @@ function AppRoutes() {
                 element={
                     <ProtectedRoute allowedRoles={["faculty"]}>
                         <FacultyGrievances />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/faculty/multi-attendance"
+                element={
+                    <ProtectedRoute allowedRoles={["faculty"]}>
+                        <MultiLectureAttendance />
                     </ProtectedRoute>
                 }
             />

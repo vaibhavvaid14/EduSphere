@@ -10,6 +10,7 @@ import ErrorMessage from "../../components/common/ErrorMessage";
 import { useEffect, useState } from "react";
 import { getAdminStats } from "../../services/adminService";
 import NoticeWidget from "../../components/common/NoticeWidget";
+import EventWidget from "../../components/common/EventWidget";
 
 function AdminDashboard() {
 
@@ -50,7 +51,10 @@ function AdminDashboard() {
                     <StatCard title="Total Faculty" value={stats.faculty} />
                     <StatCard title="Active Notices" value={stats.notices} />
                 </div>
-                <NoticeWidget />
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <NoticeWidget />
+                    <EventWidget />
+                </div>
 
                 {/* Reports */}
                 <ReportsAnalytics />

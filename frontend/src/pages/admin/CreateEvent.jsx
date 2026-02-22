@@ -1,7 +1,10 @@
+import { useState, useContext } from "react";
+import { EventContext } from "../../context/EventContext";
 import DashboardLayout from "../../components/layout/DashboardLayout";
-import { useState } from "react";
 
 function CreateEvent() {
+
+    const { addEvent } = useContext(EventContext);
 
     const [title, setTitle] = useState("");
     const [date, setDate] = useState("");
@@ -9,7 +12,12 @@ function CreateEvent() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        alert("Event Created Successfully!");
+
+        addEvent({ title, date, description });
+
+        setTitle("");
+        setDate("");
+        setDescription("");
     };
 
     return (

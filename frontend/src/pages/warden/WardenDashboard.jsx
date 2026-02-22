@@ -2,7 +2,7 @@ import DashboardLayout from "../../components/layout/DashboardLayout";
 import StatCard from "../../components/common/StatCard";
 import { useState } from "react";
 import NoticeWidget from "../../components/common/NoticeWidget";
-
+import EventWidget from "../../components/common/EventWidget";
 function WardenDashboard() {
 
     const [pendingFinal] = useState(3);
@@ -17,7 +17,10 @@ function WardenDashboard() {
                     <StatCard title="Pending Final Approvals" value={pendingFinal} />
                     <StatCard title="Hostel Grievances" value={grievances} />
                 </div>
-                <NoticeWidget />
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <NoticeWidget />
+                    <EventWidget />
+                </div>
                 {/* Approval Section */}
                 <div className="bg-white rounded-xl shadow-md p-6">
                     <h2 className="text-lg font-semibold mb-4">

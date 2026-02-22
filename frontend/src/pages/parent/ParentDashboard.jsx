@@ -2,7 +2,7 @@ import DashboardLayout from "../../components/layout/DashboardLayout";
 import StatCard from "../../components/common/StatCard";
 import { useState } from "react";
 import NoticeWidget from "../../components/common/NoticeWidget";
-
+import EventWidget from "../../components/common/EventWidget";
 function ParentDashboard() {
 
     const [pendingGatepass] = useState(2);
@@ -19,7 +19,10 @@ function ParentDashboard() {
                     <StatCard title="Pending Gatepass" value={pendingGatepass} />
                     <StatCard title="Next Meeting" value={meetings} />
                 </div>
-                <NoticeWidget />
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <NoticeWidget />
+                    <EventWidget />
+                </div>
                 {/* Gatepass Summary Section */}
                 <div className="bg-white rounded-xl shadow-md p-6">
                     <h2 className="text-lg font-semibold mb-4">

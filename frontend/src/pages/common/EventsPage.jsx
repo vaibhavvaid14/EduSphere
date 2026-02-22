@@ -1,11 +1,10 @@
+import { useContext } from "react";
+import { EventContext } from "../../context/EventContext";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 
 function EventsPage() {
 
-    const events = [
-        { id: 1, title: "Tech Fest", date: "15 March 2026" },
-        { id: 2, title: "Sports Day", date: "10 April 2026" }
-    ];
+    const { events } = useContext(EventContext);
 
     return (
         <DashboardLayout>
@@ -18,13 +17,19 @@ function EventsPage() {
                             <tr>
                                 <th className="py-3">Event</th>
                                 <th>Date</th>
+                                <th>Description</th>
                             </tr>
                         </thead>
                         <tbody>
                             {events.map(event => (
-                                <tr key={event.id} className="border-b hover:bg-gray-50">
-                                    <td className="py-3">{event.title}</td>
+                                <tr key={event.id} className="border-b hover:bg-gray-50 transition">
+                                    <td className="py-3 font-medium">
+                                        {event.title}
+                                    </td>
                                     <td>{event.date}</td>
+                                    <td className="text-gray-600">
+                                        {event.description}
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>

@@ -1,14 +1,21 @@
+import { useContext, useState } from "react";
+import { NoticeContext } from "../../context/NoticeContext";
 import DashboardLayout from "../../components/layout/DashboardLayout";
-import { useState } from "react";
 
 function CreateNotice() {
+
+    const { addNotice } = useContext(NoticeContext);
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        alert("Notice Created Successfully!");
+
+        addNotice({ title, content });
+
+        setTitle("");
+        setContent("");
     };
 
     return (

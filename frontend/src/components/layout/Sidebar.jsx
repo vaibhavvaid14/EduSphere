@@ -36,11 +36,13 @@ function Sidebar({ closeSidebar }) {
                     <>
                         <SidebarItem to="/faculty/dashboard" label="Dashboard" />
                         <SidebarItem to="/faculty/attendance" label="Attendance" />
+                        <SidebarItem to="/faculty/multi-attendance" label="Multi-Lecture Attendance" />
                         <SidebarItem to="/faculty/marks" label="Marks" />
                         <SidebarItem to="/faculty/performance" label="Analytics" />
                         <SidebarItem to="/faculty/grievances" label="Grievances" />
                         <SidebarItem to="/notices" label="Notice Board" />
                         <SidebarItem to="/events" label="Events" />
+                        
                     </>
                 )}
 
