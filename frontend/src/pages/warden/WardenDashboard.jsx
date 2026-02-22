@@ -1,6 +1,7 @@
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import StatCard from "../../components/common/StatCard";
 import { useState } from "react";
+import NoticeWidget from "../../components/common/NoticeWidget";
 
 function WardenDashboard() {
 
@@ -16,7 +17,7 @@ function WardenDashboard() {
                     <StatCard title="Pending Final Approvals" value={pendingFinal} />
                     <StatCard title="Hostel Grievances" value={grievances} />
                 </div>
-
+                <NoticeWidget />
                 {/* Approval Section */}
                 <div className="bg-white rounded-xl shadow-md p-6">
                     <h2 className="text-lg font-semibold mb-4">

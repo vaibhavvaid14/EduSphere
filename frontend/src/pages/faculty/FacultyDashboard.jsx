@@ -8,6 +8,7 @@ import Loader from "../../components/common/Loader";
 import ErrorMessage from "../../components/common/ErrorMessage";
 import { useEffect, useState } from "react";
 import { getFacultyDashboardStats } from "../../services/facultyService";
+import NoticeWidget from "../../components/common/NoticeWidget";
 
 function FacultyDashboard() {
 
@@ -48,7 +49,7 @@ function FacultyDashboard() {
                     <StatCard title="Students Assigned" value={stats.students} />
                     <StatCard title="Pending Grievances" value={stats.grievances} />
                 </div>
-
+                <NoticeWidget />
                 {/* Performance Analytics */}
                 <StudentPerformance />
 

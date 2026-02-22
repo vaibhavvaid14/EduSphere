@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { getStudentAttendance } from "../../services/studentService";
 import Loader from "../../components/common/Loader";
 import ErrorMessage from "../../components/common/ErrorMessage";
+import NoticeWidget from "../../components/common/NoticeWidget";
 
 function StudentDashboard() {
 
@@ -62,6 +63,7 @@ function StudentDashboard() {
                     <StatCard title="GPA" value="8.4" />
                     <StatCard title="Pending Grievances" value={grievances.length} />
                 </div>
+                <NoticeWidget />
 
                 {/* Attendance Chart */}
                 <AttendanceChart attendance={attendance} />

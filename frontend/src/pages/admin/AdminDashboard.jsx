@@ -9,6 +9,7 @@ import Loader from "../../components/common/Loader";
 import ErrorMessage from "../../components/common/ErrorMessage";
 import { useEffect, useState } from "react";
 import { getAdminStats } from "../../services/adminService";
+import NoticeWidget from "../../components/common/NoticeWidget";
 
 function AdminDashboard() {
 
@@ -49,6 +50,7 @@ function AdminDashboard() {
                     <StatCard title="Total Faculty" value={stats.faculty} />
                     <StatCard title="Active Notices" value={stats.notices} />
                 </div>
+                <NoticeWidget />
 
                 {/* Reports */}
                 <ReportsAnalytics />

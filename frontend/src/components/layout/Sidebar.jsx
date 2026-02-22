@@ -26,6 +26,8 @@ function Sidebar({ closeSidebar }) {
                         <SidebarItem to="/student/gatepass/request" label="Request Gatepass" />
                         <SidebarItem to="/student/gatepass/status" label="Gatepass Status" />
                         <SidebarItem to="/student/gatepass/history" label="Gatepass History" />
+                        <SidebarItem to="/notices" label="Notice Board" />
+                        <SidebarItem to="/events" label="Events" />
                     </>
                 )}
 
@@ -37,6 +39,8 @@ function Sidebar({ closeSidebar }) {
                         <SidebarItem to="/faculty/marks" label="Marks" />
                         <SidebarItem to="/faculty/performance" label="Analytics" />
                         <SidebarItem to="/faculty/grievances" label="Grievances" />
+                        <SidebarItem to="/notices" label="Notice Board" />
+                        <SidebarItem to="/events" label="Events" />
                     </>
                 )}
 
@@ -49,6 +53,10 @@ function Sidebar({ closeSidebar }) {
                         <SidebarItem to="/admin/calendar" label="Calendar" />
                         <SidebarItem to="/admin/notices" label="Notices" />
                         <SidebarItem to="/admin/reports" label="Reports" />
+                        <SidebarItem to="/admin/create-notice" label="Create Notice" />
+                        <SidebarItem to="/admin/create-event" label="Create Event" />
+                        <SidebarItem to="/notices" label="Notice Board" />
+                        <SidebarItem to="/events" label="Events" />
                     </>
                 )}
 
@@ -60,6 +68,8 @@ function Sidebar({ closeSidebar }) {
                         <SidebarItem to="/parent/gatepass" label="Gatepass Approval" />
                         <SidebarItem to="/parent/logs" label="In/Out Logs" />
                         <SidebarItem to="/parent/meeting" label="Schedule Meeting" />
+                        <SidebarItem to="/notices" label="Notice Board" />
+                        <SidebarItem to="/events" label="Events" />
                     </>
                 )}
 
@@ -70,6 +80,8 @@ function Sidebar({ closeSidebar }) {
                         <SidebarItem to="/warden/approvals" label="Final Approvals" />
                         <SidebarItem to="/warden/logs" label="Hostel Logs" />
                         <SidebarItem to="/warden/grievances" label="Hostel Grievances" />
+                        <SidebarItem to="/notices" label="Notice Board" />
+                        <SidebarItem to="/events" label="Events" />
                     </>
                 )}
 

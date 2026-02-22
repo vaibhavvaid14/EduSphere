@@ -1,6 +1,7 @@
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import StatCard from "../../components/common/StatCard";
 import { useState } from "react";
+import NoticeWidget from "../../components/common/NoticeWidget";
 
 function ParentDashboard() {
 
@@ -18,7 +19,7 @@ function ParentDashboard() {
                     <StatCard title="Pending Gatepass" value={pendingGatepass} />
                     <StatCard title="Next Meeting" value={meetings} />
                 </div>
-
+                <NoticeWidget />
                 {/* Gatepass Summary Section */}
                 <div className="bg-white rounded-xl shadow-md p-6">
                     <h2 className="text-lg font-semibold mb-4">
