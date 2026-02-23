@@ -15,6 +15,7 @@ import Grievance from "../pages/student/Grievance";
 import GatepassRequest from "../pages/student/GatepassRequest";
 import GatepassStatus from "../pages/student/GatepassStatus";
 import GatepassHistory from "../pages/student/GatepassHistory";
+import Timetable from "../pages/student/Timetable";
 
 // Faculty Pages
 import FacultyDashboard from "../pages/faculty/FacultyDashboard";
@@ -140,6 +141,14 @@ function AppRoutes() {
                 element={
                     <ProtectedRoute allowedRoles={["student"]}>
                         <GatepassHistory />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/student/timetable"
+                element={
+                    <ProtectedRoute allowedRoles={["student"]}>
+                        <Timetable />
                     </ProtectedRoute>
                 }
             />

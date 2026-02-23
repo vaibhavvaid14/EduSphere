@@ -20,6 +20,7 @@ function Sidebar({ closeSidebar }) {
                         <SidebarItem to="/student/dashboard" label="Dashboard" />
                         <SidebarItem to="/student/profile" label="Profile" />
                         <SidebarItem to="/student/attendance" label="Attendance" />
+                        <SidebarItem to="/student/timetable" label="Timetable" />
                         <SidebarItem to="/student/results" label="Results" />
                         <SidebarItem to="/student/notifications" label="Notifications" />
                         <SidebarItem to="/student/grievance" label="Grievance" />
