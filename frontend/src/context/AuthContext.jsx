@@ -1,7 +1,8 @@
 import { createContext, useState, useEffect } from "react";
-import { jwtDecode } from "jwt-decode";
 import { setToken, getToken, removeToken } from "../utils/tokenHandler";
 import { useNavigate } from "react-router-dom";
+import { login as loginApi, getMe } from "../services/authService";
+import { jwtDecode } from "jwt-decode";
 
 export const AuthContext = createContext();
 
@@ -12,30 +13,38 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [sessionExpiry, setSessionExpiry] = useState(null);
 
-    // 🔹 Load user from token on refresh
+    // Load user from token on refresh
     useEffect(() => {
-        const token = getToken();
+        const loadUser = async () => {
+            const token = getToken();
 
-        if (token) {
-            try {
-                const decoded = jwtDecode(token);
-
-                if (decoded.exp * 1000 < Date.now()) {
+            if (token) {
+                try {
+                    const decoded = jwtDecode(token);
+                    if (decoded.exp * 1000 < Date.now()) {
+                        logout();
+                    } else {
+                        setSessionExpiry(decoded.exp * 1000);
+                        try {
+                            const userData = await getMe();
+                            setUser(userData);
+                        } catch (error) {
+                            console.error("Failed to fetch user data, using decoded token");
+                            setUser(decoded);
+                        }
+                    }
+                } catch (error) {
+                    console.error("Session expired or invalid token");
                     logout();
-                } else {
-                    setUser(decoded);
-                    setSessionExpiry(decoded.exp * 1000);
                 }
-            } catch (error) {
-                console.error("Invalid token");
-                logout();
             }
-        }
+            setLoading(false);
+        };
 
-        setLoading(false);
+        loadUser();
     }, []);
 
-    // 🔹 Faculty 24-Hour Session Expiry Checker
+    // Session Expiry Checker
     useEffect(() => {
         if (!user || !sessionExpiry) return;
 
@@ -49,52 +58,50 @@ export const AuthProvider = ({ children }) => {
         return () => clearInterval(interval);
     }, [user, sessionExpiry]);
 
-    // 🔹 Login Function
-    const login = (data) => {
-        let userData;
+    // Login function
+    const login = async (credentials) => {
+        try {
+            const data = await loginApi(credentials);
+            setToken(data.token);
+            setUser(data.user);
+            
+            // Set session expiry
+            try {
+                const decoded = jwtDecode(data.token);
+                setSessionExpiry(decoded.exp * 1000);
+            } catch (e) {
+                if (data.user.role === "faculty") {
+                    setSessionExpiry(Date.now() + 24 * 60 * 60 * 1000);
+                }
+            }
 
-        if (typeof data === "object") {
-            // Dummy mode
-            userData = data;
-        } else {
-            // Real JWT mode
-            setToken(data);
-            userData = jwtDecode(data);
-        }
-
-        setUser(userData);
-
-        // If backend does not provide exp for faculty in dummy mode
-        if (userData.role === "faculty" && !userData.exp) {
-            const expiry = Date.now() + 24 * 60 * 60 * 1000;
-            setSessionExpiry(expiry);
-        } else if (userData.exp) {
-            setSessionExpiry(userData.exp * 1000);
-        }
-
-        // 🔹 Redirect based on role
-        switch (userData.role) {
-            case "student":
-                navigate("/student/dashboard");
-                break;
-            case "faculty":
-                navigate("/faculty/dashboard");
-                break;
-            case "admin":
-                navigate("/admin/dashboard");
-                break;
-            case "parent":
-                navigate("/parent/dashboard");
-                break;
-            case "warden":
-                navigate("/warden/dashboard");
-                break;
-            default:
-                navigate("/login");
+            // Redirect based on role
+            const role = data.user.role;
+            switch (role) {
+                case "student":
+                    navigate("/student/dashboard");
+                    break;
+                case "faculty":
+                    navigate("/faculty/dashboard");
+                    break;
+                case "admin":
+                    navigate("/admin/dashboard");
+                    break;
+                case "parent":
+                    navigate("/parent/dashboard");
+                    break;
+                case "warden":
+                    navigate("/warden/dashboard");
+                    break;
+                default:
+                    navigate("/login");
+            }
+        } catch (error) {
+            console.error("Login failed:", error.response?.data?.message || error.message);
+            throw error;
         }
     };
 
-    // 🔹 Logout
     const logout = () => {
         removeToken();
         setUser(null);
@@ -104,7 +111,7 @@ export const AuthProvider = ({ children }) => {
 
     return (
         <AuthContext.Provider value={{ user, login, logout, loading }}>
-            {!loading && children}
+            {children}
         </AuthContext.Provider>
     );
 };
