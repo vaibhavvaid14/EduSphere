@@ -1,16 +1,24 @@
-import API from "./api";
-
 export const login = async (credentials) => {
-    const response = await API.post("/auth/login", credentials);
-    return response.data;
+    return {
+        token: "dummy_token",
+        user: {
+            id: "dummy_1",
+            name: "Demo User",
+            email: credentials.email,
+            role: credentials.role || "student"
+        }
+    };
 };
 
 export const register = async (userData) => {
-    const response = await API.post("/auth/register", userData);
-    return response.data;
+    return { success: true };
 };
 
 export const getMe = async () => {
-    const response = await API.get("/auth/me");
-    return response.data;
+    return {
+        id: "dummy_1",
+        name: "Demo User",
+        email: "demo@edu.com",
+        role: "student"
+    };
 };

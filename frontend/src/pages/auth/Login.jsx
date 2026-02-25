@@ -7,23 +7,18 @@ function Login() {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [role, setRole] = useState("student"); // Added role state
-    const [error, setError] = useState("");
+    const [role, setRole] = useState("student");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError("");
         setIsSubmitting(true);
 
-        try {
-            // Note: role is selected but backend currently uses email/password
+        // Artificial delay for realism
+        setTimeout(async () => {
             await login({ email, password, role });
-        } catch (err) {
-            setError(err.response?.data?.message || "Login failed. Please try again.");
-        } finally {
             setIsSubmitting(false);
-        }
+        }, 800);
     };
 
     return (
@@ -40,43 +35,34 @@ function Login() {
                 <h2 className="text-3xl font-bold text-center text-slate-800 mb-2">
                     EduSphere
                 </h2>
-                <p className="text-center text-slate-500 mb-8 text-sm">
-                    University Management System
+                <p className="text-center text-slate-500 mb-8 text-sm uppercase tracking-widest font-semibold">
+                    Static Demo Mode
                 </p>
 
-                {error && (
-                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4 text-sm">
-                        {error}
-                    </div>
-                )}
-
                 <form onSubmit={handleSubmit} className="space-y-5">
-                    {/* Role Selector */}
                     <div>
-                        <label className="block text-sm text-slate-600 mb-1">
+                        <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">
                             Login As
                         </label>
                         <select
-                            className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all bg-white"
                             value={role}
                             onChange={(e) => setRole(e.target.value)}
                         >
                             <option value="student">Student</option>
                             <option value="faculty">Faculty</option>
                             <option value="admin">Admin</option>
-                            <option value="parent">Parent</option>
-                            <option value="warden">Warden</option>
                         </select>
                     </div>
 
                     <div>
-                        <label className="block text-sm text-slate-600 mb-1">
+                        <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">
                             Email
                         </label>
                         <input
                             type="email"
-                            placeholder="student@edu.com"
-                            className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                            placeholder="any@email.com"
+                            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
@@ -84,13 +70,13 @@ function Login() {
                     </div>
 
                     <div>
-                        <label className="block text-sm text-slate-600 mb-1">
+                        <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">
                             Password
                         </label>
                         <input
                             type="password"
                             placeholder="••••••••"
-                            className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
@@ -100,16 +86,18 @@ function Login() {
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className={`w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition duration-200 shadow-md hover:shadow-lg ${
+                        className={`w-full bg-indigo-600 text-white py-4 rounded-xl font-bold hover:bg-indigo-700 transition duration-300 shadow-lg hover:shadow-indigo-500/30 transform active:scale-95 ${
                             isSubmitting ? "opacity-50 cursor-not-allowed" : ""
                         }`}
                     >
-                        {isSubmitting ? "Signing In..." : "Sign In"}
+                        {isSubmitting ? "Accessing Dashboard..." : "Login to Demo"}
                     </button>
                     
-                    <p className="text-xs text-center text-slate-400 mt-4">
-                        Demo: student@edu.com / password123
-                    </p>
+                    <div className="bg-amber-50 border border-amber-100 p-4 rounded-xl mt-6">
+                        <p className="text-[10px] text-amber-700 leading-relaxed text-center">
+                            <strong>Note:</strong> Database connection is disabled. You can enter any details to explore the platform interfaces.
+                        </p>
+                    </div>
                 </form>
             </div>
         </div>
