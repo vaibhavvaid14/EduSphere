@@ -52,6 +52,8 @@ function Login() {
                             <option value="student">Student</option>
                             <option value="faculty">Faculty</option>
                             <option value="admin">Admin</option>
+                            <option value="warden">Warden</option>
+                            <option value="parents">Parents</option>
                         </select>
                     </div>
 
