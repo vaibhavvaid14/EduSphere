@@ -7,6 +7,7 @@ import "./styles/global.css";
 import { NoticeProvider } from "./context/NoticeContext";
 import { EventProvider } from "./context/EventContext";
 import { TimetableProvider } from "./context/TimetableContext";
+import { CourseProvider } from "./context/CourseContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
@@ -14,7 +15,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <NoticeProvider>
         <EventProvider>
           <TimetableProvider>
-            <App />
+            <CourseProvider>
+              <App />
+            </CourseProvider>
           </TimetableProvider>
         </EventProvider>
       </NoticeProvider>

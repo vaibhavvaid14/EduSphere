@@ -22,14 +22,17 @@ function Sidebar({ closeSidebar }) {
                         <SidebarItem to="/student/profile" label="Profile" />
                         <SidebarItem to="/student/attendance" label="Attendance" />
                         <SidebarItem to="/student/timetable" label="Timetable" />
+                        <SidebarItem to="/student/courses" label="My Courses" />
                         <SidebarItem to="/student/results" label="Results" />
                         <SidebarItem to="/student/notifications" label="Notifications" />
                         <SidebarItem to="/student/grievance" label="Grievance" />
                         <SidebarItem to="/student/gatepass/request" label="Request Gatepass" />
                         <SidebarItem to="/student/gatepass/status" label="Gatepass Status" />
                         <SidebarItem to="/student/gatepass/history" label="Gatepass History" />
+                        <SidebarItem to="/student/course-registration" label="Course Registration" />
                         <SidebarItem to="/notices" label="Notice Board" />
                         <SidebarItem to="/events" label="Events" />
+                        
                     </>
                 )}
 
@@ -40,6 +43,7 @@ function Sidebar({ closeSidebar }) {
                         <SidebarItem to="/faculty/attendance" label="Attendance" />
                         <SidebarItem to="/faculty/multi-attendance" label="Multi-Lecture Attendance" />
                         <SidebarItem to="/faculty/timetable" label="My Timetable" />
+                        <SidebarItem to="/faculty/courses" label="My Courses" />
                         <SidebarItem to="/faculty/marks" label="Marks" />
                         <SidebarItem to="/faculty/performance" label="Analytics" />
                         <SidebarItem to="/faculty/grievances" label="Grievances" />
@@ -53,6 +57,7 @@ function Sidebar({ closeSidebar }) {
                 {user?.role === "admin" && (
                     <>
                         <SidebarItem to="/admin/dashboard" label="Dashboard" />
+                        <SidebarItem to="/admin/courses" label="Manage Courses" />
                         <SidebarItem to="/admin/users" label="Users" />
                         <SidebarItem to="/admin/roles" label="Roles" />
                         <SidebarItem to="/admin/calendar" label="Calendar" />

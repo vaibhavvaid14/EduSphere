@@ -16,6 +16,8 @@ import GatepassRequest from "../pages/student/GatepassRequest";
 import GatepassStatus from "../pages/student/GatepassStatus";
 import GatepassHistory from "../pages/student/GatepassHistory";
 import Timetable from "../pages/student/Timetable";
+import CourseRegistration from "../pages/student/CourseRegistration";
+import MyCourses from "../pages/student/MyCourses";
 
 // Faculty Pages
 import FacultyDashboard from "../pages/faculty/FacultyDashboard";
@@ -25,6 +27,7 @@ import PerformanceAnalytics from "../pages/faculty/PerformanceAnalytics";
 import FacultyGrievances from "../pages/faculty/FacultyGrievances";
 import MultiLectureAttendance from "../pages/faculty/MultiLectureAttendance";
 import FacultyTimetable from "../pages/faculty/Timetable";
+import FacultyCourses from "../pages/faculty/MyCourses";
 
 // Admin Pages
 import AdminDashboard from "../pages/admin/AdminDashboard";
@@ -36,6 +39,7 @@ import Reports from "../pages/admin/Reports";
 import CreateNotice from "../pages/admin/CreateNotice";
 import CreateEvent from "../pages/admin/CreateEvent";
 import ManageTimetable from "../pages/admin/ManageTimetable";
+import ManageCourses from "../pages/admin/ManageCourses";
 
 
 // Parents pages
@@ -154,6 +158,22 @@ function AppRoutes() {
                     </ProtectedRoute>
                 }
             />
+            <Route
+                path="/student/course-registration"
+                element={
+                    <ProtectedRoute allowedRoles={["student"]}>
+                        <CourseRegistration />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/student/courses"
+                element={
+                    <ProtectedRoute allowedRoles={["student"]}>
+                        <MyCourses />
+                    </ProtectedRoute>
+                }
+            />
 
             {/* ================= FACULTY ROUTES ================= */}
             <Route
@@ -205,6 +225,14 @@ function AppRoutes() {
                 element={
                     <ProtectedRoute allowedRoles={["faculty"]}>
                         <MultiLectureAttendance />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/faculty/courses"
+                element={
+                    <ProtectedRoute allowedRoles={["faculty"]}>
+                        <FacultyCourses />
                     </ProtectedRoute>
                 }
             />
@@ -294,6 +322,14 @@ function AppRoutes() {
                 element={
                     <ProtectedRoute allowedRoles={["admin"]}>
                         <CreateEvent />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/admin/courses"
+                element={
+                    <ProtectedRoute allowedRoles={["admin"]}>
+                        <ManageCourses />
                     </ProtectedRoute>
                 }
             />
