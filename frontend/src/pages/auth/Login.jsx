@@ -9,16 +9,19 @@ function Login() {
     const [password, setPassword] = useState("");
     const [role, setRole] = useState("student");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
+        setError("");
 
-        // Artificial delay for realism
-        setTimeout(async () => {
-            await login({ email, password, role });
-            setIsSubmitting(false);
-        }, 800);
+        const result = await login({ email, password, role });
+        
+        if (!result.success) {
+            setError(result.message);
+        }
+        setIsSubmitting(false);
     };
 
     return (
@@ -32,14 +35,16 @@ function Login() {
             <div className="absolute inset-0 bg-indigo-900 opacity-40"></div>
 
             <div className="relative z-10 bg-white/90 backdrop-blur-xl shadow-2xl rounded-3xl p-10 w-full max-w-md animate-fadeIn">
-                <h2 className="text-3xl font-bold text-center text-slate-800 mb-2">
+                <h2 className="text-3xl font-bold text-center text-slate-800 mb-8">
                     EduSphere
                 </h2>
-                <p className="text-center text-slate-500 mb-8 text-sm uppercase tracking-widest font-semibold">
-                    Static Demo Mode
-                </p>
 
                 <form onSubmit={handleSubmit} className="space-y-5">
+                    {error && (
+                        <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm border border-red-100 text-center">
+                            {error}
+                        </div>
+                    )}
                     <div>
                         <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">
                             Login As
@@ -92,14 +97,8 @@ function Login() {
                             isSubmitting ? "opacity-50 cursor-not-allowed" : ""
                         }`}
                     >
-                        {isSubmitting ? "Accessing Dashboard..." : "Login to Demo"}
+                        {isSubmitting ? "Authenticating..." : "Login to EduSphere"}
                     </button>
-                    
-                    <div className="bg-amber-50 border border-amber-100 p-4 rounded-xl mt-6">
-                        <p className="text-[10px] text-amber-700 leading-relaxed text-center">
-                            <strong>Note:</strong> Database connection is disabled. You can enter any details to explore the platform interfaces.
-                        </p>
-                    </div>
                 </form>
             </div>
         </div>

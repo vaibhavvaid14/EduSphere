@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import { setToken, getToken, removeToken } from "../utils/tokenHandler";
 import { useNavigate } from "react-router-dom";
+import API from "../services/api";
 
 export const AuthContext = createContext();
 
@@ -10,52 +11,61 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // Load user from local storage on refresh (Bypass Mode)
+    // On app load: if token exists, verify it by calling /auth/me
     useEffect(() => {
-        const token = getToken();
-        if (token === "dummy_token") {
-            const savedUser = JSON.parse(localStorage.getItem("active_user"));
-            if (savedUser) {
-                setUser(savedUser);
+        const loadUser = async () => {
+            const token = getToken();
+            if (token) {
+                try {
+                    const response = await API.get("/auth/me");
+                    setUser(response.data);
+                } catch (err) {
+                    // Token is invalid or expired
+                    console.error("Token verification failed:", err);
+                    removeToken();
+                    localStorage.removeItem("active_user");
+                }
             }
-        } else {
-            // Clear any old real tokens
-            removeToken();
-        }
-        setLoading(false);
+            setLoading(false);
+        };
+        loadUser();
     }, []);
 
-    // Login function (Bypass Mode)
+    // Login function — calls real API
     const login = async (credentials) => {
-        // Create a dummy user object based on the login input
-        const dummyUser = {
-            id: "dummy_" + Math.random().toString(36).substr(2, 9),
-            name: credentials.email.split("@")[0].charAt(0).toUpperCase() + credentials.email.split("@")[0].slice(1),
-            email: credentials.email,
-            role: credentials.role || "student", 
-            department: "Computer Science",
-            semester: 6,
-            enrollmentNo: "DEMO-" + Math.floor(100000 + Math.random() * 900000),
-            isActive: true
-        };
+        try {
+            const response = await API.post("/auth/login", {
+                email: credentials.email,
+                password: credentials.password,
+            });
 
-        setToken("dummy_token");
-        localStorage.setItem("active_user", JSON.stringify(dummyUser));
-        setUser(dummyUser);
+            const { token, user: userData } = response.data;
 
-        // Redirect based on role
-        if (dummyUser.role === "student") {
-            navigate("/student/dashboard");
-        } else if (dummyUser.role === "faculty") {
-            navigate("/faculty/dashboard");
-        } else if (dummyUser.role === "admin") {
-            navigate("/admin/dashboard");
-        } else if (dummyUser.role === "parent") {
-            navigate("/parent/dashboard");
-        } else if (dummyUser.role === "warden") {
-            navigate("/warden/dashboard");
-        } else {
-            navigate("/login");
+            setToken(token);
+            localStorage.setItem("active_user", JSON.stringify(userData));
+            setUser(userData);
+
+            // Redirect based on role
+            const role = userData.role;
+            if (role === "student") {
+                navigate("/student/dashboard");
+            } else if (role === "faculty") {
+                navigate("/faculty/dashboard");
+            } else if (role === "admin") {
+                navigate("/admin/dashboard");
+            } else if (role === "parent") {
+                navigate("/parent/dashboard");
+            } else if (role === "warden") {
+                navigate("/warden/dashboard");
+            } else {
+                navigate("/login");
+            }
+
+            return { success: true };
+        } catch (error) {
+            const message =
+                error.response?.data?.message || "Login failed. Please try again.";
+            return { success: false, message };
         }
     };
 
