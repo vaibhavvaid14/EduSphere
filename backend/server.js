@@ -50,6 +50,12 @@ app.use("/api/warden", require("./routes/wardenRoutes"));
 // Parent routes
 app.use("/api/parent", require("./routes/parentRoutes"));
 
+// Timetable routes
+app.use("/api/timetable", require("./routes/timetableRoutes"));
+
+// Feedback routes
+app.use("/api/feedback", require("./routes/feedbackRoutes"));
+
 // ==================== ERROR HANDLING ====================
 
 // 404 handler
