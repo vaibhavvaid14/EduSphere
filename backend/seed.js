@@ -48,6 +48,32 @@ const seedDatabase = async () => {
             });
             console.log("✅ Faculty built: faculty@edusphere.com / password123");
         }
+
+        const wardenExists = await User.findOne({ email: "warden@edusphere.com" });
+        if (!wardenExists) {
+            await User.create({
+                name: "Chief Warden",
+                email: "warden@edusphere.com",
+                password: "password123",
+                role: "warden",
+                hostelBlock: "Block A",
+                isActive: true
+            });
+            console.log("✅ Warden built: warden@edusphere.com / password123");
+        }
+
+        const parentExists = await User.findOne({ email: "parent@edusphere.com" });
+        if (!parentExists) {
+            await User.create({
+                name: "Demo Parent",
+                email: "parent@edusphere.com",
+                password: "password123",
+                role: "parent",
+                linkedStudentEmail: "student@edusphere.com",
+                isActive: true
+            });
+            console.log("✅ Parent built: parent@edusphere.com / password123");
+        }
         
         console.log("🎉 Seed finished!");
         process.exit();
