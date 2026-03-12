@@ -30,6 +30,8 @@ function Sidebar({ closeSidebar }) {
                         <SidebarItem to="/student/gatepass/status" label="Gatepass Status" />
                         <SidebarItem to="/student/gatepass/history" label="Gatepass History" />
                         <SidebarItem to="/student/course-registration" label="Course Registration" />
+                        <SidebarItem to="/student/examination-form" label="Examination Form" />
+                        <SidebarItem to="/student/exam-schedule" label="Exam Schedule" />
                         <SidebarItem to="/student/admit-card" label="My Admit Card" />
                         <SidebarItem to="/notices" label="Notice Board" />
                         <SidebarItem to="/events" label="Events" />

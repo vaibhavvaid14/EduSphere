@@ -19,6 +19,8 @@ import Timetable from "../pages/student/Timetable";
 import CourseRegistration from "../pages/student/CourseRegistration";
 import MyCourses from "../pages/student/MyCourses";
 import MyAdmitCard from "../pages/student/MyAdmitCard";
+import ExaminationForm from "../pages/student/ExaminationForm";
+import ExamSchedule from "../pages/student/ExamSchedule";
 
 // Faculty Pages
 import FacultyDashboard from "../pages/faculty/FacultyDashboard";
@@ -181,6 +183,24 @@ function AppRoutes() {
                 element={
                     <ProtectedRoute allowedRoles={["student"]}>
                         <MyAdmitCard />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/student/examination-form"
+                element={
+                    <ProtectedRoute allowedRoles={["student"]}>
+                        <ExaminationForm />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/student/exam-schedule"
+                element={
+                    <ProtectedRoute allowedRoles={["student"]}>
+                        <ExamSchedule />
                     </ProtectedRoute>
                 }
             />
