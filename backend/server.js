@@ -15,7 +15,10 @@ app.use(express.json());
 
 // Enable CORS (allow frontend to call backend)
 const rawAllowedOrigins = process.env.CLIENT_URL || "http://localhost:5173";
-const allowedOrigins = rawAllowedOrigins.split(",").map(s => s.trim()).filter(Boolean);
+const allowedOrigins = rawAllowedOrigins
+    .split(",")
+    .map(s => s.trim().replace(/\/$/, "")) // Strip trailing slashes
+    .filter(Boolean);
 
 app.use(
     cors({
