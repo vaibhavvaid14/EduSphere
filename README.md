@@ -1,11 +1,11 @@
 # 🎓 EduSphere: Unified University Management & Student Support Platform
 
-![React](https://img.shields.io/badge/Frontend-React.js-blue)
-![Node](https://img.shields.io/badge/Backend-Node.js%20%7C%20Django-green)
-![Database](https://img.shields.io/badge/Database-MongoDB%20%7C%20PostgreSQL-brightgreen)
+![React](https://img.shields.io/badge/Frontend-React.js%20(Vite)-blue)
+![Node](https://img.shields.io/badge/Backend-Node.js%20%7C%20Express-green)
+![Database](https://img.shields.io/badge/Database-MongoDB-brightgreen)
 ![Auth](https://img.shields.io/badge/Auth-JWT%20%7C%20RBAC-orange)
-![Docker](https://img.shields.io/badge/Deployment-Docker-blueviolet)
-![Status](https://img.shields.io/badge/Project-Academic-success)
+![Deployment](https://img.shields.io/badge/Deployment-Vercel%20%7C%20Render-blueviolet)
+![Status](https://img.shields.io/badge/Project-Production%20Ready-success)
 
 ---
 
@@ -19,120 +19,95 @@ The platform improves transparency, reduces manual workload, and enhances the ov
 
 ## ❗ Problem Statement
 
-Most universities rely on multiple disconnected systems and informal communication methods for managing:
-
-- Attendance  
-- Examinations and results  
-- Scholarships and internships  
-- Mentoring and grievance handling  
-
-This fragmented approach results in delayed responses, lack of transparency, repeated queries, and inefficient administrative operations.
-
----
-
-## 💡 Proposed Solution
-
-EduSphere acts as a one-stop digital university management platform with role-based dashboards and automated workflows. It ensures seamless communication, real-time updates, and structured academic data management.
+Most universities rely on multiple disconnected systems and informal communication methods for managing attendance, exams, results, scholarships, and mentoring. This fragmented approach results in delayed responses, lack of transparency, and inefficient administrative operations.
 
 ---
 
 ## 🧩 Key Features
 
 ### 👨‍🎓 Student Module
-- Secure authentication and profile management  
-- Subject-wise and overall attendance tracking  
-- Examination schedules and result declaration  
-- Access to internal marks and grades  
-- Notifications for announcements, holidays, and deadlines  
-- Scholarship and internship information portal  
-- Online grievance and request submission with tracking  
-- Mentorship and academic guidance  
+- **Secure Dashboard**: Profile management and academic overview.
+- **Academic Tracking**: Subject-wise attendance, schedules, and result declaration.
+- **Portals**: Access to internal marks, scholarship info, and internship opportunities.
+- **Support**: Online grievance submission and academic guidance.
 
 ### 👩‍🏫 Faculty Module
-- Attendance marking and management  
-- Uploading internal marks and academic records  
-- Student performance analytics  
-- Responding to student queries and requests  
-- Mentorship and academic advising tools  
+- **Management Tools**: Attendance marking, internal marks uploading, and record management.
+- **Analytics**: Student performance insights and academic advising tools.
+- **Interaction**: Directly respond to student queries and mentorship requests.
 
 ### 🧑‍💼 Admin Module
-- User and role management (RBAC)  
-- Academic calendar and notice board management  
-- Workflow-based handling of student requests  
-- Reports on attendance, results, and platform usage  
-- System monitoring and data management  
+- **RBAC**: Advanced user and role-based access control.
+- **Communication**: Academic calendar and global notice board management.
+- **Operations**: Workflow-based handling of student requests and system monitoring.
+
+### 🤖 AI Chatbot
+- **Instant Assistance**: Built-in AI assistant to help students with common queries, powered by OpenRouter.
 
 ---
 
 ## 🏗️ System Architecture
 
-- **Frontend:** Role-based responsive dashboards  
-- **Backend:** RESTful APIs for business logic  
-- **Database:** Secure academic and administrative data storage  
-- **Security:** JWT-based authentication with role-based access control  
+- **Frontend:** Role-based responsive dashboards built with **React** and **Vite**.
+- **Backend:** Scalable RESTful APIs built with **Express (Node.js)**.
+- **Database:** **MongoDB** for secure academic and administrative data storage.
+- **Security:** **JWT**-based authentication with role-based logic.
 
 ---
-
-
 
 ## ⚙️ Technology Stack
 
-### Frontend
-- React.js  
-- HTML5, CSS3, JavaScript  
-
-### Backend
-- Node.js + Express **OR** Django  
-- RESTful API architecture  
-
-### Database
-- MongoDB **OR** PostgreSQL  
-
-### Security
-- JWT Authentication  
-- Role-Based Access Control (RBAC)  
-
-### DevOps & Tools
-- Docker (containerization)  
-- Redis (optional for caching/notifications)  
-- Email/SMS APIs  
-- Chart.js / Power BI (analytics & visualization)  
-
----
-
-## 🎯 Project Objectives
-
-- Build a centralized digital platform for university management  
-- Automate academic and administrative workflows  
-- Reduce manual effort and operational delays  
-- Improve transparency and accountability  
-- Enhance student engagement and satisfaction  
-- Support data-driven decision-making  
+- **Frontend**: React.js, Vite, Tailwind CSS, Framer Motion
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB (Mongoose)
+- **AI Integration**: OpenRouter API
+- **Authentication**: JsonWebToken (JWT), BcryptJS
 
 ---
 
 ## 🚀 Installation & Setup
 
-```bash
-# Clone the repository
-git clone https://github.com/your-username/edusphere.git
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/vaibhavvaid14/EduSphere.git
+   cd EduSphere
+   ```
 
-# Navigate to project directory
-cd edusphere
+2. **Backend Setup**
+   ```bash
+   cd backend
+   npm install
+   # Create a .env file with MONGO_URI, JWT_SECRET, and PORT
+   npm start
+   ```
 
-# Install frontend dependencies
-cd client
-npm install
+3. **Chatbot Setup**
+   ```bash
+   cd ../chatbot-backend
+   npm install
+   # Create a .env file with OPENROUTER_API_KEY
+   npm start
+   ```
 
-# Install backend dependencies
-cd ../server
-npm install
+4. **Frontend Setup**
+   ```bash
+   cd ../frontend
+   npm install
+   # Create a .env file with VITE_API_BASE_URL
+   npm run dev
+   ```
 
-# Run the application
-npm run dev
+---
 
-> ⚠️ **Note:** Make sure to configure environment variables for database credentials, JWT secrets, and Email/SMS APIs before running the project.
-```
+## 🌐 Deployment
+
+The project is structured for seamless deployment across multiple platforms:
+
+- **Frontend**: Optimized for [Vercel](https://vercel.com).
+- **Backends**: Optimized for [Render](https://render.com) using the provided `render.yaml` blueprint.
+
+For detailed instructions, see the [Deployment Guide](.gemini/antigravity/brain/a0fae8a9-5c36-4710-be29-0ae7a28d079c/deployment_guide.md).
+
 ---
 
 ## 👥 Team Members
@@ -147,25 +122,7 @@ npm run dev
 
 ---
 
-## 📂 Project Category
-
-**University / Community-Based Application**
-
----
-
-## 🔮 Future Enhancements
-
-- Mobile application support  
-- AI-based student performance prediction  
-- Chatbot for instant student assistance  
-- Integration with LMS and ERP systems  
-- Advanced analytics and dashboards  
-
----
-
 ## 📄 License
 
 This project is developed for **academic purposes** and is intended for **educational use only**.
-
----
 
