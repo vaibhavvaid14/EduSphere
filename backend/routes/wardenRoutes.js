@@ -27,5 +27,5 @@ router.get("/logs", getHostelLogs);
 // Grievances
 router.get("/grievances", getGrievances);
 router.put("/grievances/:id", respondToGrievance);
-
+// exports module
 module.exports = router;
