@@ -40,5 +40,5 @@ const grievanceSchema = new mongoose.Schema(
         timestamps: true,
     }
 );
-
+// exports module
 module.exports = mongoose.model("Grievance", grievanceSchema);
