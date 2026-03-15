@@ -14,5 +14,5 @@ router.use(protect);
 router.get("/notices", getNotices);
 router.get("/events", getEvents);
 router.get("/courses", getCourses);
-
+// exports module
 module.exports = router;
