@@ -39,5 +39,5 @@ const gatepassSchema = new mongoose.Schema(
         timestamps: true,
     }
 );
-
+// exports module
 module.exports = mongoose.model("Gatepass", gatepassSchema);
