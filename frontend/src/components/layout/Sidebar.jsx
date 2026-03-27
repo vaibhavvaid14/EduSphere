@@ -13,7 +13,7 @@ function Sidebar({ closeSidebar }) {
             </div>
 
 
-            <div className="flex-1 p-6 space-y-2 text-sm">
+            <div className="flex-1 p-6 space-y-2 text-sm overflow-y-auto">
 
                 {/* ================= STUDENT ================= */}
                 {user?.role === "student" && (
