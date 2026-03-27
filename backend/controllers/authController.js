@@ -43,6 +43,7 @@ const registerUser = async (req, res) => {
                 department: user.department,
                 semester: user.semester,
                 enrollmentNo: user.enrollmentNo,
+                student: user.student,
             },
         });
     } catch (error) {
@@ -98,6 +99,7 @@ const loginUser = async (req, res) => {
                 department: user.department,
                 semester: user.semester,
                 enrollmentNo: user.enrollmentNo,
+                student: user.student,
             },
         });
     } catch (error) {
