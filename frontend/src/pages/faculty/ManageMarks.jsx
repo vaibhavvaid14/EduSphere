@@ -14,6 +14,14 @@ function ManageMarks() {
     
     const [message, setMessage] = useState({ type: "", text: "" });
 
+    // Define max marks based on examType
+    const maxMarksMap = {
+        internal: 30,
+        midterm: 20,
+        final: 50,
+    };
+    const maxAllowed = maxMarksMap[examType] || 100;
+
     // ─── Fetch Courses ───
     useEffect(() => {
         const fetchCourses = async () => {
@@ -69,6 +77,9 @@ function ManageMarks() {
     }, [selectedCourseId, courses]);
 
     const updateScore = (id, value) => {
+        // Prevent values higher than maxAllowed
+        if (value !== "" && Number(value) > maxAllowed) return;
+
         setStudents(students.map(student =>
             student._id === id ? { ...student, score: value } : student
         ));
@@ -94,18 +105,11 @@ function ManageMarks() {
         
         const records = validMarks.map(s => {
             const numScore = Number(s.score);
-            let grade = "F";
-            if (numScore >= 90) grade = "A+";
-            else if (numScore >= 80) grade = "A";
-            else if (numScore >= 70) grade = "B+";
-            else if (numScore >= 60) grade = "B";
-            else if (numScore >= 50) grade = "C";
-
             return {
                 student: s._id,
                 marks: numScore,
-                totalMarks: 100, // Assuming 100 for now
-                grade
+                totalMarks: maxAllowed,
+                grade: "" // Backend will aggregate for final grade, component grade can be empty
             };
         });
 
@@ -119,7 +123,7 @@ function ManageMarks() {
         setSubmitting(true);
         try {
             await uploadMarks(payload);
-            setMessage({ type: "success", text: `Successfully uploaded marks for ${records.length} students.` });
+            setMessage({ type: "success", text: `Successfully uploaded ${examType} marks for ${records.length} students.` });
         } catch (err) {
             console.error("Upload marks error:", err);
             setMessage({ type: "error", text: err.response?.data?.message || "Failed to upload marks." });
@@ -132,7 +136,7 @@ function ManageMarks() {
         <DashboardLayout>
             <div className="space-y-6 animate-fadeIn">
                 <h1 className="text-2xl font-bold text-slate-800">
-                    Upload Marks
+                    Manage Marks
                 </h1>
 
                 {/* ═══ Filters ═══ */}
@@ -165,9 +169,9 @@ function ManageMarks() {
                             onChange={(e) => setExamType(e.target.value)}
                             className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 text-sm bg-slate-50"
                         >
-                            <option value="internal">Internal Assessment</option>
-                            <option value="midterm">Midterm Exam</option>
-                            <option value="final">Final Exam</option>
+                            <option value="internal">Internal Assessment (Max: 30)</option>
+                            <option value="midterm">Midterm Exam (Max: 20)</option>
+                            <option value="final">End Term Exam (Max: 50)</option>
                         </select>
                     </div>
                 </div>
@@ -187,7 +191,7 @@ function ManageMarks() {
                 <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                     <div className="p-6 border-b flex items-center justify-between bg-slate-50/50">
                         <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
-                            Enter Marks (out of 100)
+                            Enter {examType.charAt(0).toUpperCase() + examType.slice(1)} Marks (Max: {maxAllowed})
                         </h2>
                     </div>
 
@@ -208,7 +212,7 @@ function ManageMarks() {
                                         <tr>
                                             <th className="p-4 text-left font-semibold">Roll No.</th>
                                             <th className="p-4 text-left font-semibold">Student Name</th>
-                                            <th className="p-4 text-left font-semibold w-48">Score</th>
+                                            <th className="p-4 text-left font-semibold w-48">Score (0-{maxAllowed})</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-slate-100">
@@ -224,8 +228,8 @@ function ManageMarks() {
                                                     <input
                                                         type="number"
                                                         min="0"
-                                                        max="100"
-                                                        placeholder="Marks"
+                                                        max={maxAllowed}
+                                                        placeholder={`0-${maxAllowed}`}
                                                         value={student.score}
                                                         onChange={(e) => updateScore(student._id, e.target.value)}
                                                         className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 transition-all font-medium text-slate-700"

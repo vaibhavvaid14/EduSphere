@@ -125,9 +125,88 @@ const getAttendance = async (req, res) => {
 // @access  Private (student)
 const getResults = async (req, res) => {
     try {
-        const results = await Result.find({ student: req.user.id })
-            .select("subject examType marks totalMarks grade semester")
-            .sort({ semester: -1, subject: 1 });
+        const studentId = new mongoose.Types.ObjectId(req.user._id);
+
+        const results = await Result.aggregate([
+            { $match: { student: studentId } },
+            {
+                $group: {
+                    _id: { subject: "$subject", semester: "$semester" },
+                    internal: {
+                        $sum: { $cond: [{ $eq: ["$examType", "internal"] }, "$marks", 0] },
+                    },
+                    midterm: {
+                        $sum: { $cond: [{ $eq: ["$examType", "midterm"] }, "$marks", 0] },
+                    },
+                    final: {
+                        $sum: { $cond: [{ $eq: ["$examType", "final"] }, "$marks", 0] },
+                    },
+                    // We also want to track if a component exists to distinguish 0 from "Not Uploaded"
+                    hasInternal: {
+                        $max: { $cond: [{ $eq: ["$examType", "internal"] }, true, false] },
+                    },
+                    hasMidterm: {
+                        $max: { $cond: [{ $eq: ["$examType", "midterm"] }, true, false] },
+                    },
+                    hasFinal: {
+                        $max: { $cond: [{ $eq: ["$examType", "final"] }, true, false] },
+                    },
+                },
+            },
+            {
+                $project: {
+                    _id: 0,
+                    subject: "$_id.subject",
+                    semester: "$_id.semester",
+                    internal: { $cond: ["$hasInternal", "$internal", null] },
+                    midterm: { $cond: ["$hasMidterm", "$midterm", null] },
+                    final: { $cond: ["$hasFinal", "$final", null] },
+                    total: {
+                        $add: [
+                            { $ifNull: ["$internal", 0] },
+                            { $ifNull: ["$midterm", 0] },
+                            { $ifNull: ["$final", 0] },
+                        ],
+                    },
+                },
+            },
+            {
+                $addFields: {
+                    grade: {
+                        $cond: {
+                            if: { $gte: ["$total", 90] },
+                            then: "A+",
+                            else: {
+                                $cond: {
+                                    if: { $gte: ["$total", 80] },
+                                    then: "A",
+                                    else: {
+                                        $cond: {
+                                            if: { $gte: ["$total", 70] },
+                                            then: "B+",
+                                            else: {
+                                                $cond: {
+                                                    if: { $gte: ["$total", 60] },
+                                                    then: "B",
+                                                    else: {
+                                                        $cond: {
+                                                            if: { $gte: ["$total", 50] },
+                                                            then: "C",
+                                                            else: "F",
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            { $sort: { semester: -1, subject: 1 } },
+        ]);
 
         res.status(200).json(results);
     } catch (error) {

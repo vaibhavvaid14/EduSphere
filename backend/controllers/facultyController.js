@@ -194,17 +194,34 @@ const uploadMarks = async (req, res) => {
             });
         }
 
-        const resultRecords = marks.map((m) => ({
-            student: m.student,
-            subject,
-            examType,
-            semester,
-            marks: m.marks,
-            totalMarks: m.totalMarks || 100,
-            grade: m.grade || "",
-            uploadedBy: req.user._id,
-        }));
+        // Define max marks based on examType
+        const maxMarksMap = {
+            internal: 30,
+            midterm: 20,
+            final: 50,
+        };
 
+        const maxAllowed = maxMarksMap[examType] || 100;
+
+        const resultRecords = marks.map((m) => {
+            const score = Number(m.marks);
+            if (isNaN(score) || score < 0 || score > maxAllowed) {
+                throw new Error(`Invalid marks for student ${m.student}. Max allowed for ${examType} is ${maxAllowed}.`);
+            }
+
+            return {
+                student: m.student,
+                subject,
+                examType,
+                semester,
+                marks: score,
+                totalMarks: maxAllowed,
+                grade: m.grade || "",
+                uploadedBy: req.user._id,
+            };
+        });
+
+        // Use a loop or insertMany with ordered: false to skip duplicates
         const result = await Result.insertMany(resultRecords, { ordered: false })
             .catch((err) => {
                 if (err.code === 11000 || err.writeErrors) {
@@ -214,12 +231,14 @@ const uploadMarks = async (req, res) => {
             });
 
         res.status(201).json({
-            message: "Marks uploaded successfully",
+            message: `Marks for ${examType} (Max: ${maxAllowed}) uploaded successfully`,
             count: Array.isArray(result) ? result.length : result.insertedCount,
         });
     } catch (error) {
         console.error("Upload Marks Error:", error);
-        res.status(500).json({ message: "Server error while uploading marks" });
+        res.status(error.message.includes("Invalid marks") ? 400 : 500).json({ 
+            message: error.message.includes("Invalid marks") ? error.message : "Server error while uploading marks" 
+        });
     }
 };
 
