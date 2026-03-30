@@ -2,29 +2,30 @@ import DashboardLayout from "../../components/layout/DashboardLayout";
 import Loader from "../../components/common/Loader";
 import ErrorMessage from "../../components/common/ErrorMessage";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../context/AuthContext";
+import { getWardAttendance } from "../../services/parentService";
 
 function WardAttendance() {
-
+    const { user } = useAuth();
     const [attendance, setAttendance] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        // Mock data (replace with API later)
-        setTimeout(() => {
+        const fetchAttendance = async () => {
+            if (!user?.student) return;
             try {
-                setAttendance([
-                    { subject: "Mathematics", percentage: 85 },
-                    { subject: "Physics", percentage: 78 },
-                    { subject: "Computer Science", percentage: 92 },
-                ]);
-                setLoading(false);
-            } catch {
-                setError("Failed to load attendance");
+                const data = await getWardAttendance(user.student);
+                setAttendance(data || []);
+            } catch (err) {
+                console.error("Failed to fetch ward attendance:", err);
+                setError("Failed to load attendance records.");
+            } finally {
                 setLoading(false);
             }
-        }, 800);
-    }, []);
+        };
+        fetchAttendance();
+    }, [user]);
 
     if (loading) {
         return (
@@ -45,41 +46,64 @@ function WardAttendance() {
     return (
         <DashboardLayout>
             <div className="space-y-8 animate-fadeIn">
-
-                <h2 className="text-xl font-semibold">
-                    Ward Attendance Details
-                </h2>
-
-                <div className="bg-white rounded-xl shadow-md p-6 overflow-x-auto">
-                    <table className="w-full text-left">
-                        <thead className="border-b">
-                            <tr className="text-gray-500 text-sm">
-                                <th className="py-3">Subject</th>
-                                <th>Attendance</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {attendance.map((item, index) => (
-                                <tr key={index} className="border-b hover:bg-gray-50 transition">
-                                    <td className="py-3 font-medium">
-                                        {item.subject}
-                                    </td>
-                                    <td>{item.percentage}%</td>
-                                    <td>
-                                        <span className={`px-3 py-1 rounded-full text-xs font-medium
-                                            ${item.percentage < 75
-                                                ? "bg-red-100 text-red-600"
-                                                : "bg-green-100 text-green-600"}`}>
-                                            {item.percentage < 75 ? "Low" : "Good"}
-                                        </span>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                <div className="flex flex-col">
+                    <h2 className="text-2xl font-bold text-slate-800">
+                        Ward Attendance
+                    </h2>
+                    <p className="text-slate-500 text-sm mt-1">
+                        Subject-wise attendance breakdown for your ward.
+                    </p>
                 </div>
 
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                    {attendance.length === 0 ? (
+                        <div className="p-12 text-center text-slate-500">
+                            No attendance records found for your ward.
+                        </div>
+                    ) : (
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left border-collapse">
+                                <thead className="bg-slate-50 text-slate-600 uppercase text-xs font-semibold">
+                                    <tr>
+                                        <th className="px-6 py-4">Subject</th>
+                                        <th className="px-6 py-4 text-center">Total Classes</th>
+                                        <th className="px-6 py-4 text-center">Attended</th>
+                                        <th className="px-6 py-4 text-center">Percentage</th>
+                                        <th className="px-6 py-4 text-center">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-100">
+                                    {attendance.map((item, index) => (
+                                        <tr key={index} className="hover:bg-slate-50/50 transition-colors">
+                                            <td className="px-6 py-4 font-semibold text-slate-800">
+                                                {item.subject}
+                                            </td>
+                                            <td className="px-6 py-4 text-center text-slate-600">
+                                                {item.totalClasses}
+                                            </td>
+                                            <td className="px-6 py-4 text-center text-slate-600">
+                                                {item.classesAttended}
+                                            </td>
+                                            <td className="px-6 py-4 text-center">
+                                                <span className={`font-bold ${item.percentage < 75 ? 'text-red-600' : 'text-emerald-600'}`}>
+                                                    {item.percentage}%
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4 text-center">
+                                                <span className={`inline-flex px-3 py-1 rounded-full text-xs font-bold tracking-wide
+                                                    ${item.percentage < 75
+                                                        ? "bg-red-50 text-red-600 border border-red-100"
+                                                        : "bg-emerald-50 text-emerald-600 border border-emerald-100"}`}>
+                                                    {item.percentage < 75 ? "LOW" : "GOOD"}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                </div>
             </div>
         </DashboardLayout>
     );
