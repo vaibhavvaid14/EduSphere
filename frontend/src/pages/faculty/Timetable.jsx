@@ -24,7 +24,7 @@ function FacultyTimetable() {
                     My Lecture Schedule
                 </h2>
 
-                <div className="bg-white rounded-2xl shadow-md p-6 overflow-x-auto">
+                <div className="bg-white rounded-2xl shadow-md p-6 overflow-x-auto hidden md:block">
                     <table className="min-w-full text-sm">
                         <thead className="bg-indigo-50 text-indigo-700">
                             <tr>
@@ -52,6 +52,26 @@ function FacultyTimetable() {
                             ))}
                         </tbody>
                     </table>
+                </div>
+
+                <div className="block md:hidden space-y-4">
+                    {myLectures.length === 0 ? (
+                        <div className="text-center p-6 bg-white rounded-2xl shadow-sm text-slate-500">No lectures scheduled.</div>
+                    ) : (
+                        myLectures.map((lecture) => (
+                            <div key={lecture._id || lecture.id} className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
+                                <div className="flex justify-between items-start mb-2">
+                                    <h3 className="text-sm font-semibold text-slate-800">{lecture.course?.title || lecture.subject}</h3>
+                                    <span className="text-xs font-medium text-indigo-700">{lecture.day}</span>
+                                </div>
+                                <p className="text-xs text-slate-500 mb-1">Class: {lecture.department} Sem {lecture.semester}</p>
+                                <p className="text-xs text-slate-500 mb-3">Time: {lecture.startTime} - {lecture.endTime}</p>
+                                <button className="w-full text-center bg-green-600 text-white px-3 py-2 rounded-md text-sm font-semibold">
+                                    Mark Attendance
+                                </button>
+                            </div>
+                        ))
+                    )}
                 </div>
 
             </div>
