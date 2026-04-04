@@ -1,0 +1,26 @@
+[
+  {
+    "question": "What is EduSphere?",
+    "answer": "EduSphere is a premium University Management System designed to streamline academic processes, attendance tracking, and student communication."
+  },
+  {
+    "question": "How do I check my attendance?",
+    "answer": "You can check your attendance by clicking on the 'Attendance' tab in your student dashboard, or simply ask me 'What is my attendance?'"
+  },
+  {
+    "question": "Where can I see my exam results?",
+    "answer": "Exam results are available in the 'Results' section of your dashboard. You can also ask me 'Show my marks' to get a quick summary."
+  },
+  {
+    "question": "How do I pay my fees?",
+    "answer": "Fees can be paid online through the 'Fees' module in your dashboard using supported payment methods."
+  },
+  {
+    "question": "What are the university timings?",
+    "answer": "The university is generally open from 9:00 AM to 5:00 PM, Monday to Friday. Lectures follow the specific timetable assigned to your course."
+  },
+  {
+    "question": "Who can I contact for technical support?",
+    "answer": "For technical support with the EduSphere platform, you can raise a ticket in the 'Grievances' section or contact the IT helpdesk at it-support@edusphere.edu"
+  }
+]

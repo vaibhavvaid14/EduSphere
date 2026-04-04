@@ -46,6 +46,9 @@ app.get("/", (req, res) => {
   res.send("Chatbot backend running 🚀");
 });
 
+// Health Check
+app.get("/api/health", (req, res) => res.json({ status: "ok", version: "hybrid-v1-local" }));
+
 app.use("/api/chat", chatRoutes);
 
 const PORT = process.env.PORT || 5002;

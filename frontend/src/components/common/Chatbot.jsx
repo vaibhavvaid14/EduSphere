@@ -31,12 +31,18 @@ const Chatbot = () => {
         setIsLoading(true);
 
         try {
+            const token = localStorage.getItem("token");
             const response = await axios.post(
                 `${import.meta.env.VITE_CHATBOT_API_URL || "http://localhost:5002/api"}/chat`,
+                { message: input },
                 {
-                    message: input,
-                });
+                    headers: {
+                        Authorization: token ? `Bearer ${token}` : "",
+                    }
+                }
+            );
 
+            console.log(`[CHATBOT-SOURCE]: ${response.data.source}`);
             const botMessage = { role: "assistant", content: response.data.response };
             setMessages((prev) => [...prev, botMessage]);
         } catch (error) {
@@ -141,7 +147,10 @@ const Chatbot = () => {
                                 </div>
                                 <div>
                                     <h3 className="font-bold text-base tracking-tight text-white">EduSphere AI</h3>
-                                    <p className="text-[10px] uppercase font-semibold text-blue-100/80 tracking-widest">Active Assistant</p>
+                                    <div className="flex items-center gap-2">
+                                        <p className="text-[10px] uppercase font-semibold text-blue-100/80 tracking-widest">Active Assistant</p>
+                                        <span className="px-1.5 py-0.5 rounded-full bg-white/20 text-[8px] font-bold border border-white/30 text-white">LOCAL ACTIVE</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>

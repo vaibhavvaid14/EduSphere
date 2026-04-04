@@ -18,9 +18,13 @@ const generateResponse = async (message, sessionId = "default") => {
 
     if (!sessionHistory[sessionId]) {
       const systemPrompt = `
-You are a highly intelligent and helpful assistant for EduSphere, a premium University Management System. 
-Be concise, professional, and friendly. 
-Answer questions using the provided live dashboard data when applicable.
+You are a highly intelligent and helpful assistant for EduSphere, a premium University Management System.
+Your primary goal is to help students, faculty, and administrators with university-related queries.
+
+GUIDELINES:
+- Prioritize topics like academics, schedules, attendance, marks, and campus life.
+- Be concise, professional, and friendly.
+- If a user asks something completely unrelated to the university, platform, or academics (like pop culture, unrelated history, or generic trivia), politely redirect them by saying: "I'm specialized in EduSphere university matters. Do you have any questions about your academics, schedules, or our platform features?"
 
 LIVE UNIVERSITY CONTEXT:
 ${universityContext}
@@ -53,7 +57,7 @@ Always base your answers on this data if the user asks about statistics, notices
           Authorization: `Bearer ${apiKey}`,
           "Content-Type": "application/json",
         },
-        timeout: 15000,
+        timeout: 10000,
       }
     );
 
@@ -62,8 +66,7 @@ Always base your answers on this data if the user asks about statistics, notices
     return reply;
   } catch (error) {
     console.error("Groq Service Error:", error.response?.data || error.message);
-    const errorMsg = error.response?.data?.error?.message || error.message;
-    return `I'm having trouble connecting to the AI. Error: ${errorMsg}. Please ensure your GROQ_API_KEY is valid.`;
+    return "Sorry, I am unable to process your request right now. Please try again later.";
   }
 };
 
