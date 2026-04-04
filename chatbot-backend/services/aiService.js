@@ -1,21 +1,35 @@
 const axios = require("axios");
 require("dotenv").config();
 
+const { getUniversityContext } = require("./contextService");
+
 // In-memory session history
 const sessionHistory = {};
 
 const generateResponse = async (message, sessionId = "default") => {
   try {
     const apiKey = process.env.GROQ_API_KEY;
-    console.log("Chatbot using Groq API Key prefix:", apiKey ? apiKey.substring(0, 10) : "MISSING");
 
     if (!apiKey || apiKey === "your_groq_api_key_here") {
       return "Config Error: Please provide a GROQ_API_KEY in chatbot-backend/.env";
     }
 
+    const universityContext = await getUniversityContext();
+
     if (!sessionHistory[sessionId]) {
+      const systemPrompt = `
+You are a highly intelligent and helpful assistant for EduSphere, a premium University Management System. 
+Be concise, professional, and friendly. 
+Answer questions using the provided live dashboard data when applicable.
+
+LIVE UNIVERSITY CONTEXT:
+${universityContext}
+
+Always base your answers on this data if the user asks about statistics, notices, or schedules.
+      `.trim();
+
       sessionHistory[sessionId] = [
-        { role: "system", content: "You are a helpful assistant for EduSphere, a university management system. Be concise, professional, and helpful. Answer questions about academics, schedules, campus life, and university services." }
+        { role: "system", content: systemPrompt }
       ];
     }
 

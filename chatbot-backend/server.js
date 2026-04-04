@@ -3,8 +3,14 @@ const cors = require("cors");
 require("dotenv").config();
 
 const chatRoutes = require("./routes/chatRoutes");
+const mongoose = require("mongoose");
 
 const app = express();
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("✅ Chatbot-Backend connected to MongoDB"))
+  .catch((err) => console.error("❌ MongoDB connection error:", err));
 
 app.use(cors({
   origin: process.env.CLIENT_URL || "http://localhost:5173",
