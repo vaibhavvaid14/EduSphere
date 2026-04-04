@@ -12,10 +12,34 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("✅ Chatbot-Backend connected to MongoDB"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
+// CORS Configuration - Robust for Production
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  "http://localhost:5173",
+  "https://edusphere-admin.vercel.app", // Common fallback
+  "https://edusphere.netlify.app"       // Common fallback
+].filter(Boolean);
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || "http://localhost:5173",
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== "production") {
+      return callback(null, true);
+    } else {
+      console.warn(`⚠️ CORS Blocked: Origin ${origin} not in allowed list:`, allowedOrigins);
+      return callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
 }));
+
+// Request Logger (Helpful for debugging Render connections)
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.url} - Origin: ${req.headers.origin || "No Origin"}`);
+  next();
+});
 app.use(express.json());
 
 app.get("/", (req, res) => {
