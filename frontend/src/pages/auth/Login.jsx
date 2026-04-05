@@ -43,15 +43,15 @@ function Login() {
             <div className="absolute w-[300px] h-[300px] bg-indigo-500/30 blur-3xl rounded-full top-10 left-10" />
 
             {/* Card */}
-            <div className="relative z-10 w-full max-w-md p-10 rounded-3xl 
+            <div className="relative z-10 w-full max-w-md mx-4 sm:mx-0 p-6 sm:p-8 md:p-10 rounded-3xl 
                 bg-white/20 backdrop-blur-xl border border-white/30 
                 shadow-2xl shadow-indigo-500/20">
 
-                <h2 className="text-3xl font-bold text-center text-white mb-8">
+                <h2 className="text-2xl sm:text-3xl font-bold text-center text-white mb-6 sm:mb-8">
                     EduSphere
                 </h2>
 
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
 
                     {error && (
                         <div className="bg-red-500/20 text-red-200 p-3 rounded-lg text-sm border border-red-400/30 text-center">
@@ -69,7 +69,7 @@ function Login() {
                         </label>
                         <input
                             type="email"
-                            className="w-full px-4 py-3 rounded-xl 
+                            className="w-full px-4 py-3 sm:py-3 rounded-xl 
                             bg-white/30 border border-white/30 
                             text-white placeholder-gray-200
                             focus:outline-none focus:ring-2 focus:ring-indigo-400"
@@ -113,7 +113,7 @@ function Login() {
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className={`w-full py-4 rounded-xl font-bold text-white 
+                        className={`w-full py-3 sm:py-4 rounded-xl font-bold text-white 
                         bg-gradient-to-r from-indigo-600 to-violet-600 
                         transition-all duration-300 hover:scale-105
                         ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
@@ -156,7 +156,7 @@ function RoleDropdown({ role, setRole }) {
     const selected = roles.find((r) => r.value === role);
 
     return (
-        <div ref={ref}>
+        <div ref={ref} className="relative">
             <label className="block text-xs text-gray-200 mb-1 uppercase">
                 Login As
             </label>
@@ -164,7 +164,7 @@ function RoleDropdown({ role, setRole }) {
             <button
                 type="button"
                 onClick={() => setOpen(!open)}
-                className="w-full px-4 py-3 rounded-xl 
+                className="w-full px-4 py-3 sm:py-3 rounded-xl 
                 bg-white/30 border border-white/30 text-white 
                 flex justify-between items-center"
             >
@@ -173,7 +173,7 @@ function RoleDropdown({ role, setRole }) {
             </button>
 
             {open && (
-                <div className="mt-2 rounded-xl bg-white/20 backdrop-blur-xl border border-white/20 overflow-hidden">
+                <div className="absolute top-full left-0 right-0 z-50 mt-1 rounded-xl bg-slate-900/95 border border-indigo-400/50 overflow-hidden shadow-lg">
                     {roles.map((r) => (
                         <div
                             key={r.value}
@@ -181,7 +181,7 @@ function RoleDropdown({ role, setRole }) {
                                 setRole(r.value);
                                 setOpen(false);
                             }}
-                            className="px-4 py-3 text-white cursor-pointer hover:bg-indigo-500/30"
+                            className="px-4 py-3 sm:py-3 text-white cursor-pointer hover:bg-indigo-500/40 transition-colors"
                         >
                             {r.label}
                         </div>

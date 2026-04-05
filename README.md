@@ -16,6 +16,9 @@
 The platform improves transparency, reduces manual workload, and enhances the overall experience for students, faculty, and administrators.
 
 ---
+## 🌐 Live Demo
+
+[![Live Demo](https://img.shields.io/badge/Visit-EduSphere-blue?style=for-the-badge&logo=vercel)](https://edu-sphere-nu-two.vercel.app/)
 
 ## ❗ Problem Statement
 
@@ -105,8 +108,6 @@ The project is structured for seamless deployment across multiple platforms:
 
 - **Frontend**: Optimized for [Vercel](https://vercel.com).
 - **Backends**: Optimized for [Render](https://render.com) using the provided `render.yaml` blueprint.
-
-For detailed instructions, see the [Deployment Guide](.gemini/antigravity/brain/a0fae8a9-5c36-4710-be29-0ae7a28d079c/deployment_guide.md).
 
 ---
 

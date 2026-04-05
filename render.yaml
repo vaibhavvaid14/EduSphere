@@ -39,5 +39,9 @@ services:
         value: 10000
       - key: CLIENT_URL
         sync: false  # Set to your Vercel frontend URL after deploying
-      - key: OPENROUTER_API_KEY
+      - key: GROQ_API_KEY
         sync: false  # Set manually in Render dashboard
+      - key: MONGO_URI
+        sync: false  # Shared from main database
+      - key: DATABASE_NAME
+        value: edusphere
