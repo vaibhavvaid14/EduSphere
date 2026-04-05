@@ -310,21 +310,28 @@ const getDashboardStats = async (req, res) => {
                 ? Math.round((attendanceData[0].attended / attendanceData[0].total) * 100)
                 : 0;
 
-        // Average GPA (simplified: average marks / 10)
-        const resultsData = await Result.aggregate([
-            { $match: { student: studentId } },
-            {
-                $group: {
-                    _id: null,
-                    avgMarks: { $avg: "$marks" },
-                },
-            },
-        ]);
+        // Real GPA Calculation using JS grouping for higher reliability
+        const resultSet = await Result.find({ student: studentId });
+        const subjectSums = {};
+        
+        resultSet.forEach(entry => {
+            // Normalize subject name to handle potential whitespace or case inconsistencies
+            const normalizedSubject = String(entry.subject || "").trim().toLowerCase();
+            const key = `${normalizedSubject}-${entry.semester}`;
+            
+            if (!subjectSums[key]) subjectSums[key] = 0;
+            subjectSums[key] += Number(entry.marks) || 0;
+        });
 
-        const avgGPA =
-            resultsData.length > 0
-                ? (resultsData[0].avgMarks / 10).toFixed(1)
-                : "0.0";
+        const subjectKeys = Object.keys(subjectSums);
+        const totalGPAs = subjectKeys.reduce((acc, key) => acc + (subjectSums[key] / 10), 0);
+        const avgGPA = subjectKeys.length > 0 ? (totalGPAs / subjectKeys.length).toFixed(1) : "0.0";
+
+        // Enhanced logging for production/dev debugging
+        console.log(`[GPA Calculation] Student: ${studentId}, Subjects Found: ${subjectKeys.length}, Total GPA Sum: ${totalGPAs}, Final Avg: ${avgGPA}`);
+        if (subjectKeys.length > 0) {
+            console.log(`[GPA Detail] Subject Sums:`, JSON.stringify(subjectSums));
+        }
 
         // Pending grievances count
         const pendingGrievances = await Grievance.countDocuments({
