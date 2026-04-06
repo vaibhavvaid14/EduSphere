@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import DashboardLayout from "../../components/layout/DashboardLayout";
-import { submitGrievance, getStudentGrievances, getGrievanceReceivers } from "../../services/studentService";
+import { submitGrievance, getStudentGrievances } from "../../services/studentService";
 
 function Grievance() {
     const [grievances, setGrievances] = useState([]);
-    const [receivers, setReceivers] = useState({ faculties: [], wardens: [] });
     const [assignedTo, setAssignedTo] = useState("");
+    const [assignedToRole, setAssignedToRole] = useState("faculty"); // Added this
     const [subject, setSubject] = useState("");
     const [description, setDescription] = useState("");
     const [loading, setLoading] = useState(true);
@@ -24,27 +24,8 @@ function Grievance() {
         }
     };
 
-    const fetchReceivers = async () => {
-        try {
-            const data = await getGrievanceReceivers();
-            console.log("Fetched Receivers Payload:", data);
-            
-            // Handle both {faculties: [], wardens: []} and direct array if needed
-            const faculties = data.faculties || [];
-            const wardens = data.wardens || [];
-            
-            setReceivers({ faculties, wardens });
-
-            if (faculties.length > 0) setAssignedTo(faculties[0]._id);
-            else if (wardens.length > 0) setAssignedTo(wardens[0]._id);
-        } catch (error) {
-            console.error("Error fetching grievance receivers:", error);
-        }
-    };
-
     useEffect(() => {
         fetchGrievances();
-        fetchReceivers();
     }, []);
 
     const handleSubmit = async (e) => {
@@ -53,7 +34,12 @@ function Grievance() {
         setSuccessMessage("");
 
         try {
-            await submitGrievance({ subject, description, assignedTo });
+            await submitGrievance({ 
+                subject, 
+                description, 
+                assignedTo: assignedTo.trim(), 
+                assignedToRole 
+            });
             setSuccessMessage("Your grievance has been submitted successfully.");
             setSubject("");
             setDescription("");
@@ -82,16 +68,48 @@ function Grievance() {
                     )}
 
                     <form onSubmit={handleSubmit} className="space-y-4">
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">To (Faculty or Warden Name)</label>
-                            <input
-                                type="text"
-                                className="w-full border border-slate-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none"
-                                placeholder="Enter exactly as: Dr. Smith or Prof. Johnson"
-                                value={assignedTo}
-                                onChange={(e) => setAssignedTo(e.target.value)}
-                                required
-                            />
+                        <div className="flex flex-col space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-2 text-center">I am writing to a:</label>
+                                <div className="flex justify-center space-x-6">
+                                    <label className={`flex items-center space-x-2 cursor-pointer p-2 rounded-lg border transition-all ${assignedToRole === "faculty" ? "border-indigo-500 bg-indigo-50 text-indigo-700" : "border-slate-200 text-slate-500"}`}>
+                                        <input 
+                                            type="radio" 
+                                            name="role" 
+                                            value="faculty" 
+                                            checked={assignedToRole === "faculty"}
+                                            onChange={(e) => setAssignedToRole(e.target.value)}
+                                            className="hidden"
+                                        />
+                                        <span className="text-sm font-bold uppercase tracking-wider">Faculty Member</span>
+                                    </label>
+                                    <label className={`flex items-center space-x-2 cursor-pointer p-2 rounded-lg border transition-all ${assignedToRole === "warden" ? "border-rose-500 bg-rose-50 text-rose-700" : "border-slate-200 text-slate-500"}`}>
+                                        <input 
+                                            type="radio" 
+                                            name="role" 
+                                            value="warden" 
+                                            checked={assignedToRole === "warden"}
+                                            onChange={(e) => setAssignedToRole(e.target.value)}
+                                            className="hidden"
+                                        />
+                                        <span className="text-sm font-bold uppercase tracking-wider">Hostel Warden</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">
+                                    {assignedToRole === "faculty" ? "Faculty Name" : "Warden Name"}
+                                </label>
+                                <input
+                                    type="text"
+                                    className="w-full border border-slate-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none"
+                                    placeholder={assignedToRole === "faculty" ? "e.g. Dr. Smith" : "e.g. Chief Warden"}
+                                    value={assignedTo}
+                                    onChange={(e) => setAssignedTo(e.target.value)}
+                                    required
+                                />
+                            </div>
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-slate-700 mb-1">Issue Subject</label>

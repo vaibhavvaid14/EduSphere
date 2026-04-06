@@ -5,21 +5,23 @@ function GrievanceStatus({ grievances }) {
                 Grievance Status
             </h3>
 
-            <ul className="space-y-3">
-                {grievances.map((g, index) => (
+            <ul className="space-y-4">
+                {grievances.length > 0 ? grievances.slice(0, 5).map((g, index) => (
                     <li
                         key={index}
-                        className="flex justify-between border-b pb-2"
+                        className="flex justify-between items-center border-b border-slate-50 pb-3"
                     >
-                        <span>{g.message}</span>
-                        <span className={`font-semibold ${g.status === "Resolved"
-                                ? "text-green-600"
-                                : "text-orange-600"
-                            }`}>
+                        <div className="flex flex-col">
+                            <span className="font-semibold text-slate-800 text-sm">{g.subject}</span>
+                        </div>
+                        <span className={`text-[10px] font-bold uppercase px-2 py-1 rounded 
+                            ${g.status === "resolved" ? "bg-green-50 text-green-600" : "bg-orange-50 text-orange-600"}`}>
                             {g.status}
                         </span>
                     </li>
-                ))}
+                )) : (
+                    <li className="text-center text-slate-400 py-4 text-sm italic">No recent grievances</li>
+                )}
             </ul>
         </div>
     );

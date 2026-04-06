@@ -11,7 +11,12 @@ const getDashboardStats = async (req, res) => {
     try {
         const pendingGatepasses = await Gatepass.countDocuments({ status: "approved_by_parent" });
         const approvedGatepasses = await Gatepass.countDocuments({ status: "approved_by_warden" });
-        const hostelGrievances = await Grievance.countDocuments({ status: "pending" });
+        // Pending grievances (ONLY those assigned specifically to this warden by name AND role)
+        const hostelGrievances = await Grievance.countDocuments({ 
+            assignedTo: req.user.name,
+            assignedToRole: "warden",
+            status: "pending" 
+        });
         const totalHostelers = await User.countDocuments({ role: "student" }); // Simplification
 
         res.status(200).json({
@@ -113,8 +118,11 @@ const getHostelLogs = async (req, res) => {
 const getGrievances = async (req, res) => {
     try {
         const { status } = req.query;
-        // Search by warden name matching assignedTo exactly
-        let query = { assignedTo: req.user.name };
+        // Search by warden name matching assignedTo exactly AND role must be warden
+        let query = { 
+            assignedTo: req.user.name,
+            assignedToRole: "warden"
+        };
         if (status) query.status = status;
 
         const grievances = await Grievance.find(query)

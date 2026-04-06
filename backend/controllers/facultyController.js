@@ -26,8 +26,12 @@ const getDashboardStats = async (req, res) => {
             subject: { $in: courseSubjects },
         });
 
-        // Pending grievances (all unresolved grievances for now, can later filter by department)
-        const pendingGrievances = await Grievance.countDocuments({ status: "pending" });
+        // Pending grievances (ONLY those assigned specifically to this faculty by name AND role)
+        const pendingGrievances = await Grievance.countDocuments({ 
+            assignedTo: req.user.name,
+            assignedToRole: "faculty",
+            status: "pending" 
+        });
 
         res.status(200).json({
             totalClasses,
@@ -273,8 +277,11 @@ const getResults = async (req, res) => {
 const getGrievances = async (req, res) => {
     try {
         const { status } = req.query;
-        // Search by faculty name matching assignedTo exactly
-        let query = { assignedTo: req.user.name };
+        // Search by faculty name matching assignedTo exactly AND role must be faculty
+        let query = { 
+            assignedTo: req.user.name,
+            assignedToRole: "faculty"
+        };
         if (status) query.status = status;
 
         const grievances = await Grievance.find(query)

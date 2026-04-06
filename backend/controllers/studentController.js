@@ -244,15 +244,16 @@ const getNotifications = async (req, res) => {
 // @access  Private (student)
 const submitGrievance = async (req, res) => {
     try {
-        const { subject, description, assignedTo } = req.body;
+        const { subject, description, assignedTo, assignedToRole } = req.body;
 
-        if (!subject || !description || !assignedTo) {
-            return res.status(400).json({ message: "Subject, description, and assignedTo are required" });
+        if (!subject || !description || !assignedTo || !assignedToRole) {
+            return res.status(400).json({ message: "Subject, description, recipient name and role are required" });
         }
 
         const grievance = await Grievance.create({
             student: req.user.id,
             assignedTo,
+            assignedToRole,
             subject,
             description,
         });

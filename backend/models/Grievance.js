@@ -12,6 +12,11 @@ const grievanceSchema = new mongoose.Schema(
             required: [true, "Grievance must be assigned to someone (Name)"],
             trim: true,
         },
+        assignedToRole: {
+            type: String,
+            required: [true, "Intended role (faculty/warden) is required"],
+            enum: ["faculty", "warden"],
+        },
         subject: {
             type: String,
             required: [true, "Grievance subject/title is required"],
