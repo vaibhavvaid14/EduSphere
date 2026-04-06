@@ -46,6 +46,11 @@ export const getStudentGrievances = async () => {
     return data;
 };
 
+export const getGrievanceReceivers = async () => {
+    const { data } = await API.get("/student/grievance-receivers");
+    return data;
+};
+
 // Gatepass
 export const requestGatepass = async (gatepassData) => {
     const { data } = await API.post("/student/gatepass", gatepassData);

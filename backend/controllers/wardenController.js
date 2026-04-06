@@ -113,7 +113,7 @@ const getHostelLogs = async (req, res) => {
 const getGrievances = async (req, res) => {
     try {
         const { status } = req.query;
-        let query = {};
+        let query = { assignedTo: req.user._id };
         if (status) query.status = status;
 
         const grievances = await Grievance.find(query)

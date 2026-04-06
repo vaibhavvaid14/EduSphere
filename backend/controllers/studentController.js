@@ -244,14 +244,15 @@ const getNotifications = async (req, res) => {
 // @access  Private (student)
 const submitGrievance = async (req, res) => {
     try {
-        const { subject, description } = req.body;
+        const { subject, description, assignedTo } = req.body;
 
-        if (!subject || !description) {
-            return res.status(400).json({ message: "Subject and description are required" });
+        if (!subject || !description || !assignedTo) {
+            return res.status(400).json({ message: "Subject, description, and assignedTo are required" });
         }
 
         const grievance = await Grievance.create({
             student: req.user.id,
+            assignedTo,
             subject,
             description,
         });
@@ -266,6 +267,31 @@ const submitGrievance = async (req, res) => {
     }
 };
 
+// @desc    Get possible grievance receivers (faculty of student's dept & wardens)
+// @route   GET /api/student/grievance-receivers
+// @access  Private (student)
+const getGrievanceReceivers = async (req, res) => {
+    try {
+        const student = await User.findById(req.user.id);
+        if (!student) {
+            return res.status(404).json({ message: "Student not found" });
+        }
+
+        // Fetch faculties in the student's department
+        const faculties = await User.find({ role: "faculty", department: student.department })
+            .select("name email role department");
+
+        // Fetch all wardens
+        const wardens = await User.find({ role: "warden" })
+            .select("name email role");
+
+        res.status(200).json({ faculties, wardens });
+    } catch (error) {
+        console.error("Get grievance receivers error:", error.message);
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
 // @desc    Get all grievances by the student
 // @route   GET /api/student/grievances
 // @access  Private (student)
@@ -273,7 +299,8 @@ const getGrievances = async (req, res) => {
     try {
         const grievances = await Grievance.find({ student: req.user.id })
             .sort({ createdAt: -1 })
-            .populate("respondedBy", "name");
+            .populate("respondedBy", "name")
+            .populate("assignedTo", "name");
 
         res.status(200).json(grievances);
     } catch (error) {
@@ -632,6 +659,7 @@ module.exports = {
     getNotifications,
     submitGrievance,
     getGrievances,
+    getGrievanceReceivers,
     getDashboardStats,
     requestGatepass,
     getGatepasses,

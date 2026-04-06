@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import DashboardLayout from "../../components/layout/DashboardLayout";
-import { submitGrievance, getStudentGrievances } from "../../services/studentService";
+import { submitGrievance, getStudentGrievances, getGrievanceReceivers } from "../../services/studentService";
 
 function Grievance() {
     const [grievances, setGrievances] = useState([]);
+    const [receivers, setReceivers] = useState({ faculties: [], wardens: [] });
+    const [assignedTo, setAssignedTo] = useState("");
     const [subject, setSubject] = useState("");
     const [description, setDescription] = useState("");
     const [loading, setLoading] = useState(true);
@@ -21,8 +23,20 @@ function Grievance() {
         }
     };
 
+    const fetchReceivers = async () => {
+        try {
+            const data = await getGrievanceReceivers();
+            setReceivers(data);
+            if (data.faculties?.length > 0) setAssignedTo(data.faculties[0]._id);
+            else if (data.wardens?.length > 0) setAssignedTo(data.wardens[0]._id);
+        } catch (error) {
+            console.error("Error fetching grievance receivers:", error);
+        }
+    };
+
     useEffect(() => {
         fetchGrievances();
+        fetchReceivers();
     }, []);
 
     const handleSubmit = async (e) => {
@@ -31,7 +45,7 @@ function Grievance() {
         setSuccessMessage("");
 
         try {
-            await submitGrievance({ subject, description });
+            await submitGrievance({ subject, description, assignedTo });
             setSuccessMessage("Your grievance has been submitted successfully.");
             setSubject("");
             setDescription("");
@@ -60,6 +74,26 @@ function Grievance() {
                     )}
 
                     <form onSubmit={handleSubmit} className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 mb-1">To</label>
+                            <select
+                                className="w-full border border-slate-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none bg-white"
+                                value={assignedTo}
+                                onChange={(e) => setAssignedTo(e.target.value)}
+                                required
+                            >
+                                <optgroup label="Faculty (Your Department)">
+                                    {receivers.faculties?.map(f => (
+                                        <option key={f._id} value={f._id}>{f.name} (Faculty)</option>
+                                    ))}
+                                </optgroup>
+                                <optgroup label="Wardens">
+                                    {receivers.wardens?.map(w => (
+                                        <option key={w._id} value={w._id}>{w.name} (Warden)</option>
+                                    ))}
+                                </optgroup>
+                            </select>
+                        </div>
                         <div>
                             <label className="block text-sm font-medium text-slate-700 mb-1">Issue Subject</label>
                             <input
@@ -139,8 +173,13 @@ function GrievanceItem({ data }) {
                     <p className="text-xs font-bold text-indigo-600 mb-1">Official Response:</p>
                     <p className="text-xs text-slate-700 italic">"{data.response}"</p>
                     <div className="mt-2 text-[10px] text-slate-400">
-                        Responded by {data.respondedBy?.name || "Faculty"} on {new Date(data.respondedAt).toLocaleDateString()}
+                        Assigned To: {data.assignedTo?.name || "Unknown"} | Responded by: {data.respondedBy?.name || data.assignedTo?.name || "Staff"} on {new Date(data.respondedAt).toLocaleDateString()}
                     </div>
+                </div>
+            )}
+            {!data.response && (
+                <div className="mt-2 text-[10px] text-slate-400">
+                    Assigned To: {data.assignedTo ? data.assignedTo.name : "Unknown"}
                 </div>
             )}
             <div className="mt-3 text-[10px] text-slate-300">

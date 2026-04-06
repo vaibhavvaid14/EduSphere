@@ -10,6 +10,7 @@ const {
     getNotifications,
     submitGrievance,
     getGrievances,
+    getGrievanceReceivers,
     getDashboardStats,
     requestGatepass,
     getGatepasses,
@@ -48,6 +49,9 @@ router.post("/grievance", submitGrievance);
 
 // GET /api/student/grievances — Get all submitted grievances
 router.get("/grievances", getGrievances);
+
+// GET /api/student/grievance-receivers — Get possible grievance receivers
+router.get("/grievance-receivers", getGrievanceReceivers);
 
 // POST /api/student/gatepass — Request a gatepass
 router.post("/gatepass", requestGatepass);
