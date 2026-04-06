@@ -29,6 +29,7 @@ function ManageUsers() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [roleFilter, setRoleFilter] = useState("student");
+    const [departmentFilter, setDepartmentFilter] = useState("");
     const [search, setSearch] = useState("");
 
     // Modal state
@@ -38,6 +39,7 @@ function ManageUsers() {
     const [saving, setSaving] = useState(false);
     const [formError, setFormError] = useState("");
     const [allStudents, setAllStudents] = useState([]); // For parent association
+    const [allDepts, setAllDepts] = useState([]);
 
     // Delete confirmation
     const [deleteTarget, setDeleteTarget] = useState(null);
@@ -50,6 +52,7 @@ function ManageUsers() {
             setError(null);
             const params = {};
             if (roleFilter) params.role = roleFilter;
+            if (departmentFilter) params.department = departmentFilter;
             if (search.trim()) params.search = search.trim();
             const data = await getUsers(params);
             setUsers(data.users || []);
@@ -58,14 +61,19 @@ function ManageUsers() {
         } finally {
             setLoading(false);
         }
-    }, [roleFilter, search]);
+    }, [roleFilter, departmentFilter, search]);
 
     const fetchAllStudents = useCallback(async () => {
         try {
-            const data = await getUsers({ role: "student" });
-            setAllStudents(data.users || []);
+            const data = await getUsers({});
+            const allFetched = data.users || [];
+            
+            const depts = [...new Set(allFetched.map(u => u.department).filter(Boolean))].sort();
+            setAllDepts(depts);
+
+            setAllStudents(allFetched.filter(u => u.role === "student"));
         } catch (err) {
-            console.error("Failed to fetch students", err);
+            console.error("Failed to fetch students/depts", err);
         }
     }, []);
 
@@ -206,12 +214,12 @@ function ManageUsers() {
 
                 {/* ═══ Filter tabs + Search ═══ */}
                 <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                    <div className="flex bg-slate-100 rounded-xl p-1 gap-1">
+                    <div className="flex bg-slate-100 rounded-xl p-1 gap-1 overflow-x-auto">
                         {tabs.map((tab) => (
                             <button
                                 key={tab.key}
                                 onClick={() => setRoleFilter(tab.key)}
-                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${roleFilter === tab.key
+                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap ${roleFilter === tab.key
                                         ? "bg-white text-indigo-700 shadow-sm"
                                         : "text-slate-500 hover:text-slate-700"
                                     }`}
@@ -232,6 +240,24 @@ function ManageUsers() {
                             onChange={(e) => setSearch(e.target.value)}
                             className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 text-sm transition-all"
                         />
+                    </div>
+
+                    <div className="relative w-full sm:w-48">
+                        <select
+                            value={departmentFilter}
+                            onChange={(e) => setDepartmentFilter(e.target.value)}
+                            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 text-sm transition-all appearance-none bg-white text-slate-700"
+                        >
+                            <option value="">All Dept / Ward</option>
+                            {allDepts.map(dept => (
+                                <option key={dept} value={dept}>{dept}</option>
+                            ))}
+                        </select>
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
                     </div>
                 </div>
 

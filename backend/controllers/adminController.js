@@ -42,10 +42,12 @@ const getDashboardStats = async (req, res) => {
 // @access  Private/Admin
 const getUsers = async (req, res) => {
     try {
-        const { role, search } = req.query;
+        const { role, search, department } = req.query;
         let query = {};
 
         if (role) query.role = role;
+        if (department) query.department = department;
+
         if (search) {
             query.$or = [
                 { name: { $regex: search, $options: "i" } },
