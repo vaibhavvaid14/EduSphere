@@ -52,10 +52,21 @@ function ManageUsers() {
             setError(null);
             const params = {};
             if (roleFilter) params.role = roleFilter;
-            if (departmentFilter) params.department = departmentFilter;
+            if (departmentFilter && (roleFilter === "student" || roleFilter === "faculty")) {
+                params.department = departmentFilter;
+            }
             if (search.trim()) params.search = search.trim();
             const data = await getUsers(params);
-            setUsers(data.users || []);
+            
+            // Apply frontend filter as a fallback to guarantee strict filtering
+            let fetchedUsers = data.users || [];
+            if (departmentFilter && (roleFilter === "student" || roleFilter === "faculty")) {
+                fetchedUsers = fetchedUsers.filter(u => 
+                    u.department && u.department.toLowerCase() === departmentFilter.toLowerCase()
+                );
+            }
+            
+            setUsers(fetchedUsers);
         } catch {
             setError("Failed to load users. Make sure the backend is running.");
         } finally {
@@ -242,23 +253,26 @@ function ManageUsers() {
                         />
                     </div>
 
-                    <div className="relative w-full sm:w-48">
-                        <select
-                            value={departmentFilter}
-                            onChange={(e) => setDepartmentFilter(e.target.value)}
-                            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 text-sm transition-all appearance-none bg-white text-slate-700"
-                        >
-                            <option value="">All Dept / Ward</option>
-                            {allDepts.map(dept => (
-                                <option key={dept} value={dept}>{dept}</option>
-                            ))}
-                        </select>
-                        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                            </svg>
+                    {/* Department Dropdown (Only for Student and Faculty) */}
+                    {(roleFilter === "student" || roleFilter === "faculty") && (
+                        <div className="relative w-full sm:w-48">
+                            <select
+                                value={departmentFilter}
+                                onChange={(e) => setDepartmentFilter(e.target.value)}
+                                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 text-sm transition-all appearance-none bg-white text-slate-700"
+                            >
+                                <option value="">All Dept / Ward</option>
+                                {allDepts.map(dept => (
+                                    <option key={dept} value={dept}>{dept}</option>
+                                ))}
+                            </select>
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
 
                 {/* ═══ Users Table ═══ */}
