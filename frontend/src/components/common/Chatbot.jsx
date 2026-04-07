@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import API from "../../services/api";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Chatbot = () => {
@@ -31,16 +31,7 @@ const Chatbot = () => {
         setIsLoading(true);
 
         try {
-            const token = localStorage.getItem("token");
-            const response = await axios.post(
-                `${import.meta.env.VITE_CHATBOT_API_URL || "http://localhost:5002/api"}/chat`,
-                { message: input },
-                {
-                    headers: {
-                        Authorization: token ? `Bearer ${token}` : "",
-                    }
-                }
-            );
+            const response = await API.post("/chatbot", { message: input });
 
             console.log(`[CHATBOT-SOURCE]: ${response.data.source}`);
             const botMessage = { role: "assistant", content: response.data.response };
