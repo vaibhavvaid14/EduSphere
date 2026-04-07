@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import { getMyCourses, getStudents, markAttendance } from "../../services/facultyService";
 
 function ManageAttendance() {
+    const location = useLocation();
     const [courses, setCourses] = useState([]);
     const [selectedCourseId, setSelectedCourseId] = useState("");
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
@@ -20,7 +22,11 @@ function ManageAttendance() {
             try {
                 const data = await getMyCourses();
                 setCourses(data.courses || []);
-                if (data.courses?.length > 0) {
+                
+                // If courseId is passed in state, use it; otherwise use the first course
+                if (location.state?.courseId) {
+                    setSelectedCourseId(location.state.courseId);
+                } else if (data.courses?.length > 0) {
                     setSelectedCourseId(data.courses[0]._id);
                 }
             } catch (err) {
@@ -31,7 +37,7 @@ function ManageAttendance() {
             }
         };
         fetchCourses();
-    }, []);
+    }, [location.state]);
 
     // ─── Fetch Students when course changes ───
     useEffect(() => {

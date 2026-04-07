@@ -1,10 +1,11 @@
 import { useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import { TimetableContext } from "../../context/TimetableContext";
 import { AuthContext } from "../../context/AuthContext";
 
 function FacultyTimetable() {
-
+    const navigate = useNavigate();
     const { timetable, fetchTimetable } = useContext(TimetableContext);
     const { user } = useContext(AuthContext);
 
@@ -15,6 +16,19 @@ function FacultyTimetable() {
     const myLectures = timetable.filter(
         lecture => lecture.course?.faculty?._id === user?._id || lecture.course?.faculty === user?._id
     );
+
+    const handleMarkAttendance = (lecture) => {
+        if (lecture.isMarked) return;
+        
+        // Pass course ID via state to ManageAttendance
+        navigate("/faculty/attendance", { 
+            state: { 
+                courseId: lecture.course?._id,
+                department: lecture.department,
+                semester: lecture.semester
+            } 
+        });
+    };
 
     return (
         <DashboardLayout>
@@ -44,8 +58,11 @@ function FacultyTimetable() {
                                     <td className="p-4">{lecture.day}</td>
                                     <td className="p-4">{lecture.startTime} - {lecture.endTime}</td>
                                     <td className="p-4">
-                                        <button className="bg-green-600 text-white px-3 py-1 rounded-md text-xs">
-                                            Mark Attendance
+                                        <button 
+                                            onClick={() => handleMarkAttendance(lecture)}
+                                            className={`${lecture.isMarked ? "bg-slate-500" : "bg-emerald-600 hover:bg-emerald-700"} text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-colors`}
+                                        >
+                                            {lecture.isMarked ? "Marked" : "Mark Attendance"}
                                         </button>
                                     </td>
                                 </tr>
@@ -66,8 +83,11 @@ function FacultyTimetable() {
                                 </div>
                                 <p className="text-xs text-slate-500 mb-1">Class: {lecture.department} Sem {lecture.semester}</p>
                                 <p className="text-xs text-slate-500 mb-3">Time: {lecture.startTime} - {lecture.endTime}</p>
-                                <button className="w-full text-center bg-green-600 text-white px-3 py-2 rounded-md text-sm font-semibold">
-                                    Mark Attendance
+                                <button 
+                                    onClick={() => handleMarkAttendance(lecture)}
+                                    className={`w-full text-center ${lecture.isMarked ? "bg-slate-500" : "bg-emerald-600"} text-white px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors`}
+                                >
+                                    {lecture.isMarked ? "Marked" : "Mark Attendance"}
                                 </button>
                             </div>
                         ))
@@ -79,4 +99,4 @@ function FacultyTimetable() {
     );
 }
 
-export default FacultyTimetable;
+export default FacultyTimetable;

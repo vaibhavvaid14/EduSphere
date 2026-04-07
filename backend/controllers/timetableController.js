@@ -1,6 +1,8 @@
 const Timetable = require("../models/Timetable");
 const Course = require("../models/Course");
 
+const Attendance = require("../models/Attendance");
+
 // @desc    Get timetable entries for a specific department and semester
 // @route   GET /api/timetable
 // @access  Private
@@ -17,6 +19,28 @@ const getTimetable = async (req, res) => {
                 populate: { path: "faculty", select: "name email" }
             })
             .sort({ day: 1, startTime: 1 });
+
+        // If faculty, check for today's attendance status
+        if (req.user && req.user.role === "faculty") {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+
+            // Get all attendance subjects marked today by this faculty
+            const markedSubjects = await Attendance.distinct("subject", {
+                markedBy: req.user._id,
+                date: { $gte: today, $lt: tomorrow }
+            });
+
+            const updatedEntries = entries.map(entry => {
+                const entryPlain = entry.toObject();
+                entryPlain.isMarked = markedSubjects.includes(entryPlain.course?.title);
+                return entryPlain;
+            });
+
+            return res.status(200).json(updatedEntries);
+        }
 
         res.status(200).json(entries);
     } catch (error) {
