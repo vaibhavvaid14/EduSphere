@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import API from "../../services/api";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Chatbot = () => {
@@ -31,16 +31,7 @@ const Chatbot = () => {
         setIsLoading(true);
 
         try {
-            const token = localStorage.getItem("token");
-            const response = await axios.post(
-                `${import.meta.env.VITE_CHATBOT_API_URL || "http://localhost:5002/api"}/chat`,
-                { message: input },
-                {
-                    headers: {
-                        Authorization: token ? `Bearer ${token}` : "",
-                    }
-                }
-            );
+            const response = await API.post("/chatbot", { message: input });
 
             console.log(`[CHATBOT-SOURCE]: ${response.data.source}`);
             const botMessage = { role: "assistant", content: response.data.response };
@@ -131,7 +122,7 @@ const Chatbot = () => {
                         initial="hidden"
                         animate="visible"
                         exit="exit"
-                        className="absolute bottom-20 right-0 w-[90vw] max-w-[400px] sm:w-[400px] h-[65vh] sm:h-[550px] max-h-[80vh] flex flex-col rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-white/20 backdrop-blur-xl bg-white/80"
+                        className="absolute bottom-20 right-0 w-[90vw] max-w-[400px] sm:w-[400px] h-[65vh] sm:h-[550px] max-h-[80vh] flex flex-col rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-white/20 dark:border-slate-700/50 backdrop-blur-xl bg-white/80 dark:bg-slate-900/90"
                     >
                         {/* Glassmorphic Header */}
                         <div className="px-6 py-5 bg-gradient-to-r from-blue-600/90 to-indigo-600/90 text-white backdrop-blur-md relative overflow-hidden">
@@ -156,7 +147,7 @@ const Chatbot = () => {
                         </div>
 
                         {/* Messages Area */}
-                        <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide bg-white/40">
+                        <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide bg-white/40 dark:bg-slate-900/50">
                             {messages.map((msg, index) => (
                                 <motion.div
                                     key={index}
@@ -174,7 +165,7 @@ const Chatbot = () => {
                                     {/* Bubble */}
                                     <div className={`max-w-[75%] px-4 py-3 rounded-2xl shadow-sm text-sm leading-relaxed ${msg.role === "user"
                                         ? "bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-medium rounded-br-none"
-                                        : "bg-white/90 text-slate-700 border border-slate-100 rounded-bl-none"
+                                        : "bg-white/90 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-100 dark:border-slate-700 rounded-bl-none"
                                         }`}>
                                         {msg.content}
                                     </div>
@@ -187,7 +178,7 @@ const Chatbot = () => {
                                     <div className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold">
                                         AI
                                     </div>
-                                    <div className="bg-white/90 px-4 py-3 rounded-2xl rounded-bl-none border border-slate-100 shadow-sm">
+                                    <div className="bg-white/90 dark:bg-slate-800 px-4 py-3 rounded-2xl rounded-bl-none border border-slate-100 dark:border-slate-700 shadow-sm">
                                         <div className="flex space-x-1.5">
                                             {[0, 1, 2].map((i) => (
                                                 <motion.div
@@ -205,17 +196,17 @@ const Chatbot = () => {
                         </div>
 
                         {/* Glassmorphic Input Area */}
-                        <div className="p-4 bg-white/60 border-t border-white/20 backdrop-blur-md">
+                        <div className="p-4 bg-white/60 dark:bg-slate-900/80 border-t border-white/20 dark:border-slate-700/50 backdrop-blur-md">
                             <form
                                 onSubmit={handleSend}
-                                className="relative flex items-center bg-white/80 border border-slate-200 rounded-2xl p-1 shadow-inner focus-within:border-blue-400 focus-within:ring-4 focus-within:ring-blue-400/10 transition-all duration-300"
+                                className="relative flex items-center bg-white/80 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-1 shadow-inner focus-within:border-blue-400 focus-within:ring-4 focus-within:ring-blue-400/10 transition-all duration-300"
                             >
                                 <input
                                     type="text"
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
                                     placeholder="Ask anything..."
-                                    className="flex-1 bg-transparent border-none px-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none"
+                                    className="flex-1 bg-transparent border-none px-4 py-2.5 text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none"
                                 />
                                 <motion.button
                                     whileHover={{ scale: 1.05, backgroundColor: "#2563eb" }}
