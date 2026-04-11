@@ -3,12 +3,13 @@ const { sendToChatbot } = require("../services/chatbotService");
 const handleChatbot = async (req, res) => {
     try {
         const { message, sessionId } = req.body;
+        const authHeader = req.headers.authorization;
 
         if (!message) {
             return res.status(400).json({ message: "Message required" });
         }
 
-        const data = await sendToChatbot(message, sessionId);
+        const data = await sendToChatbot(message, sessionId, authHeader);
 
         res.json(data);
 

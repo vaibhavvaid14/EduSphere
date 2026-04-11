@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useContext } from "react";
+import { createContext, useState, useEffect, useContext, useCallback } from "react";
 import API from "../services/api";
 import { AuthContext } from "./AuthContext";
 
@@ -8,7 +8,7 @@ export const TimetableProvider = ({ children }) => {
     const { user } = useContext(AuthContext);
     const [timetable, setTimetable] = useState([]);
 
-    const fetchTimetable = async (department, semester) => {
+    const fetchTimetable = useCallback(async (department, semester) => {
         if (!user) return;
         try {
             const { data } = await API.get("/timetable", {
@@ -18,7 +18,7 @@ export const TimetableProvider = ({ children }) => {
         } catch (error) {
             console.error("Failed to fetch timetable:", error);
         }
-    };
+    }, [user]);
 
     const addLecture = async (lectureData) => {
         try {
