@@ -55,6 +55,7 @@ function Sidebar({ closeSidebar }) {
                 {user?.role === "faculty" && (
                     <>
                         <SidebarItem to="/faculty/dashboard" label="Dashboard" />
+                        <SidebarItem to="/faculty/profile" label="Profile" />
                         <SidebarItem to="/faculty/attendance" label="Attendance" />
                         <SidebarItem to="/faculty/multi-attendance" label="Multi-Lecture Attendance" />
                         <SidebarItem to="/faculty/timetable" label="My Timetable" />
@@ -71,6 +72,7 @@ function Sidebar({ closeSidebar }) {
                 {user?.role === "admin" && (
                     <>
                         <SidebarItem to="/admin/dashboard" label="Dashboard" />
+                        <SidebarItem to="/admin/profile" label="Profile" />
                         <SidebarItem to="/admin/courses" label="Manage Courses" />
                         <SidebarItem to="/admin/users" label="Users" />
                         <SidebarItem to="/admin/roles" label="Roles" />
@@ -89,6 +91,7 @@ function Sidebar({ closeSidebar }) {
                 {user?.role === "parent" && (
                     <>
                         <SidebarItem to="/parent/dashboard" label="Dashboard" />
+                        <SidebarItem to="/parent/profile" label="Profile" />
                         <SidebarItem to="/parent/attendance" label="Ward Attendance" />
                         <SidebarItem to="/parent/gatepass" label="Gatepass Approval" />
                         <SidebarItem to="/parent/logs" label="In/Out Logs" />
@@ -102,6 +105,7 @@ function Sidebar({ closeSidebar }) {
                 {user?.role === "warden" && (
                     <>
                         <SidebarItem to="/warden/dashboard" label="Dashboard" />
+                        <SidebarItem to="/warden/profile" label="Profile" />
                         <SidebarItem to="/warden/approvals" label="Final Approvals" />
                         <SidebarItem to="/warden/logs" label="Hostel Logs" />
                         <SidebarItem to="/warden/grievances" label="Hostel Grievances" />
